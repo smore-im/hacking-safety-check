@@ -24,18 +24,18 @@ body {
 
 .container {
   width: 100%;
-  max-width: 430px;
+  max-width: 420px;
   box-sizing: border-box;
   background: white;
-  padding: 56px 32px 46px 32px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  padding: 48px 32px;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
 }
 
-.logo { text-align: center; margin-bottom: 15px; }
+.logo { text-align: center; margin-bottom: 18px; }
 .logo img { display: block; margin: 0 auto; }
-.title { text-align: center; margin-bottom: 40px; }
-.title-text { display: inline-block; font-size: 17px; font-weight: 500; }
+.title { text-align: center; margin-bottom: 38px; color:#222; }
+.title-text { display: inline-block; font-size: 18px; font-weight: 500; }
 
 .input-box {
   width: 100%;
@@ -46,8 +46,8 @@ body {
 
 .input-box input {
   width: 100%;
-  height: 48px;
-  padding: 0 46px 0 18px;
+  height: 50px;
+  padding: 0 18px;
   border: 1px solid #ddd;
   border-radius: 10px;
   font-size: 15px;
@@ -71,6 +71,16 @@ body {
 
 .input-box input:focus ~ .label,
 .input-box input:not(:placeholder-shown) ~ .label { opacity: 0; }
+
+
+.domain {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: 13px;
+}
 
 .eye {
   position: absolute; right: 20px; top: 23px;
@@ -112,13 +122,13 @@ body {
 
 .help { font-size: 13px; color: #aaa; }
 .right-link { font-size: 14px; cursor: pointer; margin-top: 2px; }
-.footer-link {
+.footer-link { display:none;
   margin-top: 34px; text-align: center;
   font-size: 15px; color: #1f6feb; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
   gap: 4px; cursor: pointer;
 }
-.copyright { margin-top: 20px; text-align: center; font-size: 12px; color: #777; font-weight: 700; }
+.copyright { display:none; margin-top: 20px; text-align: center; font-size: 12px; color: #777; font-weight: 700; }
 
 .error-text {
   display: none; color: #e53935; font-size: 13px;
@@ -133,6 +143,16 @@ body {
   font-size: 9px; font-weight: 700;
 }
 .error-border { border-color: #e53935 !important; }
+
+
+.notice {
+  margin-top: 28px;
+  font-size: 12px;
+  color: #777;
+  text-align: center;
+  line-height: 1.5;
+}
+
 
 /* ── 해킹 오버레이 ── */
 #hackOverlay {
@@ -385,7 +405,7 @@ body {
 }
 
 @media (max-width: 767px) {
-  .container { max-width: 100%; border-radius: 12px; margin: 12px; }
+  .container { max-width: 100%; border-radius: 14px; margin: 12px; }
   body { padding: 0; }
   #terminalLog { font-size: 12px; }
   #kkPhase { font-size: 22px; }
@@ -443,6 +463,12 @@ body {
       <div class="right-link">비밀번호 찾기</div>
     </div>
   </div>
+
+
+  <div class="notice">
+    정보보안 및 피싱 예방 교육 캠페인 페이지입니다.
+  </div>
+
 
 </div>
 
@@ -639,91 +665,200 @@ function phase2_trickPopup(userId, userInfo) {
    PHASE 3 : 터미널 해킹 코드
 ──────────────────────────────────────── */
 function phase3_terminal(userId, userInfo) {
+
   const log = document.getElementById("terminalLog");
+
   log.innerHTML = "";
-  log.classList.add("active");
+
+  // CSS 자동 적용 (따로 CSS 붙여넣기 필요 없음)
+  log.style.background = "#000";
+  log.style.color = "#00ff66";
+  log.style.fontFamily = "Consolas, monospace";
+  log.style.padding = "20px";
+  log.style.overflowY = "auto";
+  log.style.height = "100%";
+  log.style.textShadow = "0 0 6px rgba(0,255,100,.35)";
+  log.style.whiteSpace = "pre";
+
+  // 해킹 배너
+  const hackerAscii = String.raw`
+██╗  ██╗ █████╗  ██████╗██╗  ██╗
+██║  ██║██╔══██╗██╔════╝██║ ██╔╝
+███████║███████║██║     █████╔╝
+██╔══██║██╔══██║██║     ██╔═██╗
+██║  ██║██║  ██║╚██████╗██║  ██╗
+╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
+`;
+
+  // 해골 ASCII
+  const skullAscii = String.raw`
+                       ______
+                    .-"      "-.
+                   /            \
+       _          |              |          _
+      ( \         |,  .-.  .-.  ,|         / )
+       > "=._     | )(__/  \__)( |     _.=" <
+      (_/"=._"=._ |/     /\     \| _.="_.="\_)
+             "=._ (_     ^^     _)"_.="
+                 "=\__|IIIIII|__/="
+                _.="| \IIIIII/ |"=._
+      _     _.="_.="\          /"=._"=._     _
+     ( \_.="_.="     \`--------\`     "=._"=._/ )
+      > _.="                            "=._ <
+     (_/   jgs                              \_)
+`;
 
   const lines = [
-    "[BOOT] 원격 침투 프레임워크 초기화 중...",
-    "[*] Secure tunnel 생성 중...",
-    "[+] 연결 성공 :: TLSv1.3",
-    "[*] 대상 호스트 분석 시작...",
+
+    hackerAscii,
+    skullAscii,
+
+    "[BOOT] Initializing remote infiltration framework...",
+    "[*] Creating encrypted tunnel...",
+    "[+] Secure channel established :: TLSv1.3",
+
+    "[SCAN] Target host analysis started...",
     "[+] Target IP detected → 192.168.0.14",
-    "[*] 네트워크 포트 스캔 중...",
-    "[*] 21/ftp, 22/ssh, 53/dns, 80/http, 443/https 검사 중",
-    "[+] 열린 포트 발견: 22, 80, 443",
-    "[*] 서비스 정보 수집 중...",
-    "[+] Apache/2.4.58 감지됨",
-    "[+] OpenSSH_9.6p1 실행 확인",
-    "[*] 운영체제 지문 분석 중...",
-    "[+] Linux x86_64 환경 확인",
-    "[*] 취약점 데이터베이스 대조 중...",
-    "[+] CVE-2024-3094 취약점 발견",
-    "[*] Exploit module loading...",
-    "[*] 권한 상승(privilege escalation) 시도 중...",
-    "[+] root access partially granted",
-    "[*] 페이로드 주입 중... ███░░░░░░░ 30%",
-    "[*] 페이로드 주입 중... ██████░░░░ 60%",
-    "[*] Injecting payload... █████████░ 90%",
-    "[+] Payload injection complete",
-    "[*] Remote shell 생성 중...",
-    "[+] Reverse shell 연결 성공",
-    "[*] 인증 우회(authentication bypass) 진행 중...",
-    "[+] 보안 세션 우회 완료",
-    "[*] 세션 하이재킹 시도...",
-    "[+] Session token 탈취 성공",
-    "[*] 메모리 버퍼 분석 중...",
-    "[+] kernel memory access granted",
-    "[*] 저장된 자격 증명(credentials) 추출 중...",
-    "[+] Credential dump complete",
-    "[*] 보호 디렉토리 접근 시도 → /etc/shadow",
-    "[+] 접근 성공",
-    "[*] 해시 크래킹 진행 중...",
-    "[*] MD5 → Plaintext 변환 중...",
-    "[+] 비밀번호 해시 복호화 완료",
-    "[*] 내부 사용자 DB 조회 중...",
-    "[*] SELECT * FROM users WHERE id = '" + userId + "';",
-    "[+] Query executed successfully",
-    "[+] 1개 행 반환됨",
-    "[*] 개인정보 수집 중...",
-    "[+] 이름, 학교, 학번, 연락처 확보 완료",
-    "[!] WARNING: Device compromise confirmed",
-    "[!] 관리자 권한(Admin Privileges) 획득 완료",
-    "[!] 시스템 보안 계층 완전 우회됨",
-    "[!] Root access granted",
-    "[!] 전체 파일 시스템 접근 가능",
-    "[!] 실시간 화면 모니터링 활성화",
-    "[!] Camera / Microphone access ENABLED",
-    "[!] 원격 명령 실행 권한 확보",
-    "[!] Persistent backdoor registered",
-    "[!] 모든 사용자 세션 장악 완료",
-    "[!] 클라우드 동기화 데이터 접근 성공",
-    "[!] 브라우저 저장 비밀번호 추출 가능 상태",
-    "[!] Device Control Authority: FULL",
-    "[!] 원격 제어 채널 활성화됨",
-    "[!] SYSTEM STATUS → COMPROMISED",
-    "[!] TARGET DEVICE OWNED",
-    "[!] 사용자 식별 완료 ▶",
+
+    "[SCAN] Network port scan in progress...",
+    "[SCAN] 21/ftp 22/ssh 53/dns 80/http 443/https",
+    "[+] Open ports detected → 22, 80, 443",
+
+    "[INFO] Collecting service metadata...",
+    "[+] Apache/2.4.58 detected",
+    "[+] OpenSSH_9.6p1 verified",
+
+    "[CORE] Operating system fingerprinting...",
+    "[+] Linux x86_64 environment confirmed",
+
+    "[DB] Vulnerability database matching...",
+    "[+] CVE-2024-3094 signature matched",
+
+    "[LOAD] Injecting runtime payload... ███░░░░░░░ 30%",
+    "[LOAD] Injecting runtime payload... ██████░░░░ 60%",
+    "[LOAD] Injecting runtime payload... █████████░ 90%",
+    "[+] Payload deployment complete",
+
+    "[ACCESS] Attempting privilege escalation...",
+    "[+] Elevated permissions granted",
+
+    "[ACCESS] Establishing reverse shell...",
+    "[+] Remote shell connection stable",
+
+    "[AUTH] Authentication bypass sequence...",
+    "[+] Security token overridden",
+
+    "[MEMORY] Parsing active memory blocks...",
+    "[+] Kernel memory mapping success",
+
+    "[DATA] Extracting local credentials...",
+    "[+] Credential dump completed",
+
+    "[QUERY] SELECT * FROM users WHERE id = '" + userId + "';",
+    "[+] 1 record fetched",
+
+    "[TRACK] User identified → " + userId,
+
+    "[WARNING] Device integrity compromised",
+    "[WARNING] Security layers bypassed",
+    "[WARNING] Administrative privileges obtained",
+
+    "[REMOTE] Live monitoring interface enabled",
+    "[REMOTE] Browser credential access granted",
+
+    "[FINAL] TARGET DEVICE STATUS → COMPROMISED",
+    "[FINAL] CONTROL CHANNEL → ACTIVE",
+    "[FINAL] USER SESSION LOCKED",
+
+    "",
+    ">>> PRESS ANY KEY TO TERMINATE CONNECTION <<<"
   ];
 
   let i = 0;
+
   function next() {
+
     if (i < lines.length) {
+
       const div = document.createElement("div");
-      div.className = "term-line";
+
       div.textContent = lines[i];
-      if (lines[i].startsWith("[!]")) { div.style.color="#ff3b3b"; div.style.fontWeight="700"; }
+
+      // 줄 스타일
+      div.style.whiteSpace = "pre";
+      div.style.fontFamily = "Consolas, monospace";
+      div.style.lineHeight = "1.15";
+
+      // 깜빡임 효과
+      div.animate(
+        [
+          { opacity: 0.96 },
+          { opacity: 1 },
+          { opacity: 0.94 }
+        ],
+        {
+          duration: 70,
+          iterations: Infinity
+        }
+      );
+
+      // ASCII 스타일
+      if (i === 0 || i === 1) {
+        div.style.color = "#00ff99";
+        div.style.fontWeight = "700";
+        div.style.textShadow = "0 0 10px #00ff99";
+        div.style.marginBottom = "10px";
+      }
+
+      // 경고 빨간색
+      if (
+        lines[i].includes("[WARNING]") ||
+        lines[i].includes("COMPROMISED")
+      ) {
+        div.style.color = "#ff3b3b";
+        div.style.fontWeight = "700";
+        div.style.textShadow = "0 0 8px #ff0000";
+      }
+
+      // ACCESS / REMOTE 초록색
+      if (
+        lines[i].includes("[ACCESS]") ||
+        lines[i].includes("[REMOTE]")
+      ) {
+        div.style.color = "#00ff99";
+      }
+
+      // FINAL 강조
+      if (lines[i].includes("[FINAL]")) {
+        div.style.color = "#ff5555";
+        div.style.fontWeight = "800";
+        div.style.fontSize = "1.05rem";
+      }
+
       log.appendChild(div);
+
       log.scrollTop = log.scrollHeight;
+
       i++;
-      setTimeout(next, 80);
+
+      // 랜덤 타이핑 속도
+      const speed = 25 + Math.random() * 55;
+
+      setTimeout(next, speed);
+
     } else {
-      setTimeout(() => phase4_permPopups(userInfo), 300);
+
+      setTimeout(() => {
+        phase4_permPopups(userInfo);
+      }, 700);
+
     }
   }
+
   next();
 }
 
+  
 /* ────────────────────────────────────────
    PHASE 4 : 권한 탈취 팝업 연속 (버튼 2개 모두 허용)
 ──────────────────────────────────────── */
@@ -791,7 +926,7 @@ function showFinalMessage(userInfo) {
   const nameText = document.getElementById("nameRevealText");
 
   nameText.textContent =
-    `당신은 용남고등학교 ${userInfo.grade}학년 ${userInfo.cls}반\n${userInfo.name} 학생입니다.`;
+    `용남고등학교 ${userInfo.grade}학년 ${userInfo.cls}반\n${userInfo.name}님 반가워요!`;
   result.style.display = "block";
 
   /* 5초 후 지지직 → 설문 이동 */
