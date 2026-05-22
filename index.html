@@ -2,27 +2,15 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>해킹 안전 자가진단</title>
 
 <meta property="og:title" content="해킹 안전 자가진단">
 <meta property="og:description" content="21세기의 해킹 속에서 나는 안전할까?">
-<meta property="og:image" content="https://smore-im.github.io/hacking-safety_check/hack.png">
-<meta property="og:url" content="https://smore-im.github.io/hacking-safety_check/">
 <meta property="og:type" content="website">
 
 <style>
-  
-.input-box input {
-  width: 100%;
-  height: 48px;
-  padding: 0 46px 0 18px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  font-size: 15px;
-  box-sizing: border-box;
-}
-  
+
 body {
   margin: 0;
   background: #f5f6f7;
@@ -73,32 +61,17 @@ body {
   display: block;
 }
 
-.login-btn {
+.input-box input {
   width: 100%;
-  height: 46px;
-  margin: 22px 0 0 0;
-  background: #1f6feb;
-  border: none;
-  color: white;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  display: block;
-  cursor: pointer;
+  height: 48px;
+  padding: 0 46px 0 18px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 15px;
   box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
 }
 
-#pw.password-mode {
-  letter-spacing: 2px;
-}
-
-.input-box input:focus,
-.find-input:focus,
-.name-input:focus,
-.phone-row:focus-within,
-.verify-row input:focus,
-.email-row:focus-within {
+.input-box input:focus {
   border-color: #1f6feb;
   outline: none;
   box-shadow: 0 0 0 2px rgba(31,111,235,0.1);
@@ -120,15 +93,6 @@ body {
   opacity: 0;
 }
 
-.domain {
-  position: absolute;
-  right: 30px;
-  top: 23px;
-  transform: translateY(-50%);
-  font-size: 13px;
-  color: #666;
-}
-
 .eye {
   position: absolute;
   right: 20px;
@@ -143,12 +107,28 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-.eye svg {
-  pointer-events: none;
+.login-btn {
+  width: 100%;
+  height: 46px;
+  margin: 22px 0 0 0;
+  background: #1f6feb;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  display: block;
+  cursor: pointer;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
-button:hover {
+.login-btn:hover {
   background: #1a5ed8;
+}
+
+#pw.password-mode {
+  letter-spacing: 2px;
 }
 
 .options {
@@ -175,7 +155,7 @@ button:hover {
   font-size: 14px;
 }
 
-.option-item input {
+.option-item input[type="checkbox"] {
   appearance: none;
   width: 16px;
   height: 16px;
@@ -185,11 +165,11 @@ button:hover {
   cursor: pointer;
 }
 
-.option-item input:checked {
+.option-item input[type="checkbox"]:checked {
   border-color: #1f6feb;
 }
 
-.option-item input:checked::after {
+.option-item input[type="checkbox"]:checked::after {
   content: "";
   width: 7px;
   height: 7px;
@@ -201,10 +181,7 @@ button:hover {
   transform: translate(-50%, -50%);
 }
 
-.help {
-  font-size: 13px;
-  color: #aaa;
-}
+.help { font-size: 13px; color: #aaa; }
 
 .right-link {
   font-size: 14px;
@@ -225,14 +202,7 @@ button:hover {
   cursor: pointer;
 }
 
-.footer-link .arrow {
-  position: relative;
-  top: -1px;
-  font-size: 14px;
-}
-
 .copyright {
-  position: static;
   margin-top: 20px;
   text-align: center;
   font-size: 12px;
@@ -241,8 +211,7 @@ button:hover {
 }
 
 /* 에러 */
-.error-text,
-.global-error {
+.error-text {
   display: none;
   color: #e53935;
   font-size: 13px;
@@ -250,18 +219,9 @@ button:hover {
   line-height: 1.3;
   align-items: center;
   gap: 6px;
-  width: 95%;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-.global-error {
-  margin: 0 0 14px 0;
-  width: 100%;
-}
-
-.error-text.show,
-.global-error.show {
+.error-text.show {
   display: flex;
 }
 
@@ -277,15 +237,10 @@ button:hover {
   justify-content: center;
   font-size: 9px;
   font-weight: 700;
-  line-height: 1;
 }
 
 .error-border {
   border-color: #e53935 !important;
-}
-
-.hidden {
-  display: none !important;
 }
 
 /* ───────────────────────────────
@@ -307,7 +262,6 @@ button:hover {
   display: flex;
 }
 
-/* 터미널 로그 스크롤 영역 */
 #terminalLog {
   position: absolute;
   inset: 0;
@@ -315,8 +269,8 @@ button:hover {
   box-sizing: border-box;
   overflow: hidden;
   font-family: 'Courier New', Courier, monospace;
-  font-size: 13px;
-  line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.7;
   color: #00ff41;
   display: flex;
   flex-direction: column;
@@ -334,13 +288,13 @@ button:hover {
   to { opacity: 1; }
 }
 
-/* 결과 카드 (이름 공개) */
+/* 결과 카드 */
 #hackResult {
   display: none;
   position: relative;
   z-index: 10;
   text-align: center;
-  padding: 0 24px;
+  padding: 0 28px;
   animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
 }
 
@@ -351,21 +305,21 @@ button:hover {
 
 #hackResult .name-reveal {
   font-family: 'Courier New', Courier, monospace;
-  font-size: clamp(18px, 4vw, 24px);
+  font-size: clamp(17px, 4vw, 22px);
   color: #00ff41;
   font-weight: 700;
-  margin-bottom: 20px;
-  line-height: 1.5;
+  margin-bottom: 24px;
+  line-height: 1.6;
   text-shadow: 0 0 10px #00ff4188;
 }
 
 #hackResult .hacked-msg {
   font-family: 'Courier New', Courier, monospace;
-  font-size: clamp(22px, 5vw, 32px);
+  font-size: clamp(20px, 5vw, 30px);
   color: #ff3b3b;
   font-weight: 700;
   text-shadow: 0 0 16px #ff3b3b99;
-  margin-bottom: 30px;
+  margin-bottom: 32px;
   animation: glitch 0.3s infinite alternate;
 }
 
@@ -381,6 +335,7 @@ button:hover {
   position: fixed;
   inset: 0;
   z-index: 10000;
+  pointer-events: none;
   background: repeating-linear-gradient(
     0deg,
     rgba(255,255,255,0.03) 0px,
@@ -389,7 +344,6 @@ button:hover {
     transparent 2px
   );
   animation: staticAnim 0.08s steps(1) infinite;
-  pointer-events: none;
 }
 
 @keyframes staticAnim {
@@ -400,61 +354,39 @@ button:hover {
   100% { background-position: 0 0;   opacity: 0.7; }
 }
 
-#staticNoise.active {
-  display: block;
+#staticNoise.active { display: block; }
+
+/* 아이패드 최적화 */
+@media (min-width: 768px) and (max-width: 1100px) {
+  .container {
+    max-width: 500px;
+    padding: 64px 48px 56px 48px;
+  }
+  .input-box input {
+    height: 56px;
+    font-size: 17px;
+  }
+  .login-btn {
+    height: 54px;
+    font-size: 18px;
+  }
+  .title-text { font-size: 19px; }
+  #terminalLog { font-size: 16px; line-height: 1.8; }
+  #hackResult .name-reveal { font-size: 26px; }
+  #hackResult .hacked-msg  { font-size: 34px; }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .container {
     max-width: 100%;
     border-radius: 12px;
     margin: 12px;
   }
-  body {
-    padding: 0;
-  }
-  .input-box input,
-  button,
-  .options {
-    width: 100%;
-  }
-  #terminalLog {
-    font-size: 11px;
-  }
+  body { padding: 0; }
+  #terminalLog { font-size: 12px; }
 }
-  
+
 </style>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp } 
-    from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCKViiftRE-FzlUlFa02TiGPSBI1asN-rA",
-    authDomain: "hacking-safety-check.firebaseapp.com",
-    projectId: "hacking-safety-check",
-    storageBucket: "hacking-safety-check.firebasestorage.app",
-    messagingSenderId: "109562541075",
-    appId: "1:109562541075:web:f4e1d717847a03b0b7bbe6"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  let sessionId = localStorage.getItem("sessionId");
-  if (!sessionId) {
-    sessionId = crypto.randomUUID();
-    localStorage.setItem("sessionId", sessionId);
-  }
-
-  window.sessionId = sessionId;
-  window._db = db;
-  window._collection = collection;
-  window._addDoc = addDoc;
-  window._serverTimestamp = serverTimestamp;
-</script>
-  
 </head>
 
 <body>
@@ -473,8 +405,10 @@ button:hover {
   <div class="input-box">
     <input type="text" id="loginId" placeholder=" " autocomplete="off">
     <span class="label">로그인 ID</span>
-    <span class="domain">@gne.go.kr</span>
-    <div class="error-text" id="loginIdError"><span class="error-icon">!</span><span>아이디 또는 비밀번호가 일치하지 않습니다.</span></div>
+    <div class="error-text" id="loginIdError">
+      <span class="error-icon">!</span>
+      <span>아이디 또는 비밀번호가 일치하지 않습니다.</span>
+    </div>
   </div>
 
   <div class="input-box">
@@ -486,11 +420,10 @@ button:hover {
           <path d="M1 12C3 7 7 4 12 4s9 3 11 8c-2 5-6 8-11 8s-9-3-11-8z"/>
           <circle cx="12" cy="12" r="3"/>
         </g>
-        <line id="eyeSlashWhite" x1="1.8" y1="1.8" x2="19.8" y2="19.8" stroke="white" stroke-width="3.6" stroke-linecap="round" style="display:block;" />
-        <line id="eyeSlash" x1="3" y1="3" x2="21" y2="21" stroke="#555" stroke-width="2.5" stroke-linecap="round" style="display:block;" />
+        <line id="eyeSlashWhite" x1="1.8" y1="1.8" x2="19.8" y2="19.8" stroke="white" stroke-width="3.6" stroke-linecap="round"/>
+        <line id="eyeSlash"      x1="3"   y1="3"   x2="21"  y2="21"  stroke="#555"  stroke-width="2.5" stroke-linecap="round"/>
       </svg>
     </span>
-    <div class="error-text" id="loginPwError"><span class="error-icon">!</span><span>비밀번호를 입력해주세요.</span></div>
   </div>
 
   <button class="login-btn" onclick="validateLogin()">로그인</button>
@@ -511,14 +444,12 @@ button:hover {
 
 </div>
 
-<div class="footer-link" id="footerLoginLink">
-  <span class="arrow">←</span>
+<div class="footer-link">
+  <span>←</span>
   <span>다른 계정으로 로그인</span>
 </div>
 
-<div class="copyright">
-  © NAVER Cloud Corp.
-</div>
+<div class="copyright">© 임시가짜 Cloud Corp.</div>
 
 <!-- 해킹 오버레이 -->
 <div id="hackOverlay">
@@ -532,28 +463,27 @@ button:hover {
 <!-- 지지직 노이즈 -->
 <div id="staticNoise"></div>
 
+
 <script>
 /* ============================================================
-   ★ 여기에 아이디-이름 정보를 입력하세요 ★
+   ★ 테스트 아이디 목록 ★
    형식: "아이디": "이름"
-   예시: "yn2401": "김철수"
-   아이디는 @gne.go.kr 앞부분만 입력하세요.
+   예시: "student01": "홍길동"
+   → 이 아이디를 입력하면 해킹 연출이 시작됩니다.
 ============================================================ */
 const USER_DATA = {
-  "yn2401": "김철수",
-  "yn2402": "이영희",
-  "yn2403": "박민준",
+  "test":      "테스트",
+  "student01": "홍길동",
   /* 여기에 계속 추가하세요 */
 };
 
 /* ============================================================
    ★ 설문조사 링크 ★
-   아래 URL을 실제 설문 링크로 바꿔주세요.
 ============================================================ */
 const SURVEY_URL = "https://smore.im/quiz/dNOAzwDYdt";
 
 /* ============================================================
-   이하 코드는 수정하지 않아도 됩니다.
+   이하 수정 불필요
 ============================================================ */
 
 let isHidden = true;
@@ -576,17 +506,15 @@ function togglePw() {
   }
 }
 
-/* 비밀번호 칸 클릭/포커스 → 아이디 검증 후 해킹 연출 */
-document.getElementById("pw").addEventListener("focus", function() {
+/* 비밀번호 칸 클릭 → 아이디 확인 후 해킹 연출 */
+document.getElementById("pw").addEventListener("focus", function () {
   const idVal = document.getElementById("loginId").value.trim();
 
-  /* 아이디가 비어있으면 그냥 포커스만 */
   if (idVal === "") {
     document.getElementById("pw").removeAttribute("readonly");
     return;
   }
 
-  /* USER_DATA에 없는 아이디 */
   if (!USER_DATA.hasOwnProperty(idVal)) {
     this.blur();
     showError("loginIdError", "아이디 또는 비밀번호가 일치하지 않습니다.");
@@ -594,19 +522,15 @@ document.getElementById("pw").addEventListener("focus", function() {
     return;
   }
 
-  /* 아이디가 있으면 → 해킹 연출 시작 */
   this.blur();
   startHackSequence(idVal, USER_DATA[idVal]);
 });
 
-/* 로그인 버튼 클릭 */
-async function validateLogin() {
+/* 로그인 버튼 */
+function validateLogin() {
   const id = document.getElementById("loginId");
-  const pw = document.getElementById("pw");
   hideError("loginIdError");
-  hideError("loginPwError");
   removeErrorBorder(id);
-  removeErrorBorder(pw);
 
   const idVal = id.value.trim();
 
@@ -622,30 +546,16 @@ async function validateLogin() {
     return;
   }
 
-  /* 아이디가 맞으면 해킹 연출 */
   startHackSequence(idVal, USER_DATA[idVal]);
 }
 
 /* ──────────────────────────────
-   해킹 연출 메인 함수
+   해킹 연출
 ────────────────────────────── */
 function startHackSequence(userId, userName) {
-  /* Firebase: 어떤 아이디가 클릭됐는지만 기록 (비밀번호 저장 없음) */
-  try {
-    window._addDoc(
-      window._collection(window._db, "users", window.sessionId, "hack_triggered"),
-      {
-        userId: userId,
-        timestamp: window._serverTimestamp(),
-        userAgent: navigator.userAgent
-      }
-    );
-  } catch(e) {}
+  document.getElementById("hackOverlay").classList.add("active");
 
-  const overlay = document.getElementById("hackOverlay");
-  overlay.classList.add("active");
-
-  const terminalLines = [
+  const lines = [
     "[*] 시스템 침투 시작...",
     "[*] 포트 스캔 중... 22/ssh, 80/http, 443/https",
     "[+] 열린 포트 발견: 22, 80, 443",
@@ -676,111 +586,81 @@ function startHackSequence(userId, userName) {
   const log = document.getElementById("terminalLog");
   log.innerHTML = "";
 
-  let lineIndex = 0;
-  const delay = 90; /* 줄당 출력 속도 (ms) */
-
-  function printNextLine() {
-    if (lineIndex < terminalLines.length) {
+  let i = 0;
+  function next() {
+    if (i < lines.length) {
       const div = document.createElement("div");
       div.className = "term-line";
-      div.style.animationDelay = "0ms";
-      div.textContent = terminalLines[lineIndex];
-
-      /* 경고 줄은 빨간색 */
-      if (terminalLines[lineIndex].startsWith("[!]")) {
+      div.textContent = lines[i];
+      if (lines[i].startsWith("[!]")) {
         div.style.color = "#ff3b3b";
         div.style.fontWeight = "700";
       }
-
       log.appendChild(div);
       log.scrollTop = log.scrollHeight;
-      lineIndex++;
-      setTimeout(printNextLine, delay);
+      i++;
+      setTimeout(next, 90);
     } else {
-      /* 터미널 끝 → 결과 카드 표시 */
       setTimeout(() => showNameReveal(userName), 400);
     }
   }
-
-  printNextLine();
+  next();
 }
 
 function showNameReveal(userName) {
-  /* 터미널 로그 어둡게 */
-  document.getElementById("terminalLog").style.opacity = "0.25";
+  document.getElementById("terminalLog").style.opacity = "0.2";
 
-  const result = document.getElementById("hackResult");
+  const result   = document.getElementById("hackResult");
   const nameText = document.getElementById("nameRevealText");
 
   nameText.textContent = `당신은 용남고등학교에 재학중인 ${userName}이군요.`;
   result.style.display = "block";
 
-  /* 3초 뒤 지지직 → 설문 이동 */
-  setTimeout(() => triggerStaticAndRedirect(), 3000);
+  setTimeout(triggerStaticAndRedirect, 3000);
 }
 
 function triggerStaticAndRedirect() {
-  const noise = document.getElementById("staticNoise");
-  noise.classList.add("active");
+  document.getElementById("staticNoise").classList.add("active");
 
-  /* 지지직 효과 중에 화면 반짝임 */
   let flashes = 0;
-  const flashInterval = setInterval(() => {
+  const iv = setInterval(() => {
     document.getElementById("hackOverlay").style.opacity =
       Math.random() > 0.5 ? "1" : "0.3";
     flashes++;
     if (flashes >= 12) {
-      clearInterval(flashInterval);
+      clearInterval(iv);
       window.location.href = SURVEY_URL;
     }
   }, 100);
 }
 
-/* ──────────────────────────────
-   공통 유틸
-────────────────────────────── */
-function showError(elementId, message) {
-  const el = document.getElementById(elementId);
-  if (message) {
-    const span = el.querySelector("span:last-child");
-    if (span) span.textContent = message;
-  }
+/* 유틸 */
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  const span = el.querySelector("span:last-child");
+  if (msg && span) span.textContent = msg;
   el.classList.add("show");
 }
-
-function hideError(elementId) {
-  document.getElementById(elementId).classList.remove("show");
+function hideError(id) {
+  document.getElementById(id).classList.remove("show");
 }
+function addErrorBorder(el)    { el.classList.add("error-border"); }
+function removeErrorBorder(el) { el.classList.remove("error-border"); }
 
-function addErrorBorder(el) {
-  el.classList.add("error-border");
-}
-
-function removeErrorBorder(el) {
-  el.classList.remove("error-border");
-}
-
-document.addEventListener("click", function(e) {
-  const loginView = document.getElementById("loginView");
-  if (loginView.style.display !== "none") {
-    const isInsideInput = e.target.closest(".input-box");
-    const isLoginButton = e.target.closest("button");
-    const isOptionArea  = e.target.closest(".options");
-    if (!isInsideInput && !isLoginButton && !isOptionArea) {
-      hideError("loginIdError");
-      hideError("loginPwError");
-      removeErrorBorder(document.getElementById("loginId"));
-      removeErrorBorder(document.getElementById("pw"));
-    }
+document.addEventListener("click", function (e) {
+  if (!e.target.closest(".input-box") &&
+      !e.target.closest("button") &&
+      !e.target.closest(".options")) {
+    hideError("loginIdError");
+    removeErrorBorder(document.getElementById("loginId"));
+    removeErrorBorder(document.getElementById("pw"));
   }
 });
 
 window.onload = () => {
   const text = document.querySelector(".title-text");
   const logo = document.getElementById("logoImg");
-  if (text && logo) {
-    logo.style.width = (text.offsetWidth * 1.15) + "px";
-  }
+  if (text && logo) logo.style.width = (text.offsetWidth * 1.15) + "px";
 };
 </script>
 
