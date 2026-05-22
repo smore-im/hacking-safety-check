@@ -560,23 +560,62 @@ function togglePw() {
 }
 
 document.getElementById("pw").addEventListener("focus", function () {
+
   const idVal = document.getElementById("loginId").value.trim();
-  if (idVal === "") { document.getElementById("pw").removeAttribute("readonly"); return; }
+
+  // 아이디 비어있으면 아무것도 안함
+  if (idVal === "") return;
+
+  // 존재하지 않는 아이디
   if (!USER_DATA.hasOwnProperty(idVal)) {
-    this.blur();
     showError("loginIdError", "아이디가 일치하지 않습니다.");
-    addErrorBorder(document.getElementById("loginId")); return;
+    addErrorBorder(document.getElementById("loginId"));
+    return;
   }
-  this.blur();
+
+  // 비밀번호 경고 숨김
+  hideError("loginPwError");
+  removeErrorBorder(document.getElementById("pw"));
+
+  // 해킹 시작
   startHackSequence(idVal, USER_DATA[idVal]);
 });
 
 function validateLogin() {
+
   const id = document.getElementById("loginId");
-  hideError("loginIdError"); removeErrorBorder(id);
+  const pw = document.getElementById("pw");
+
+  hideError("loginIdError");
+  hideError("loginPwError");
+
+  removeErrorBorder(id);
+  removeErrorBorder(pw);
+
   const idVal = id.value.trim();
-  if (idVal === "") { addErrorBorder(id); showError("loginIdError","ID를 입력해주세요."); return; }
-  if (!USER_DATA.hasOwnProperty(idVal)) { addErrorBorder(id); showError("loginIdError","아이디가 일치하지 않습니다."); return; }
+
+  // 아이디 비어있음
+  if (idVal === "") {
+    addErrorBorder(id);
+    showError("loginIdError","ID를 입력해주세요.");
+    return;
+  }
+
+  // 존재하지 않는 아이디
+  if (!USER_DATA.hasOwnProperty(idVal)) {
+    addErrorBorder(id);
+    showError("loginIdError","아이디가 일치하지 않습니다.");
+    return;
+  }
+
+  // 비밀번호 비어있음
+  if (pw.value.trim() === "") {
+    addErrorBorder(pw);
+    showError("loginPwError","비밀번호를 입력해주세요.");
+    return;
+  }
+
+  // 여기 도달하면 해킹 시작
   startHackSequence(idVal, USER_DATA[idVal]);
 }
 
@@ -664,6 +703,7 @@ function phase3_terminal(userId, userInfo) {
   const log = document.getElementById("terminalLog");
 
   log.innerHTML = "";
+  log.classList.add("active");
 
   // CSS 자동 적용 (따로 CSS 붙여넣기 필요 없음)
   log.style.background = "#000";
