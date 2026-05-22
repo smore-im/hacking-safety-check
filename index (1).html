@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>해킹 안전 자가진단</title>
+<meta property="og:title" content="해킹 안전 자가진단">
+<meta property="og:description" content="21세기의 해킹 속에서 나는 안전할까?">
+<meta property="og:type" content="website">
+<style>
+
+/* ── 기본 레이아웃 ── */
+body {
+  margin: 0;
+  background: #f5f6f7;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px 0;
+}
+
+.container {
+  width: 100%;
+  max-width: 430px;
+  box-sizing: border-box;
+  background: white;
+  padding: 56px 32px 46px 32px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.logo { text-align: center; margin-bottom: 15px; }
+.logo img { display: block; margin: 0 auto; }
+.title { text-align: center; margin-bottom: 40px; }
+.title-text { display: inline-block; font-size: 17px; font-weight: 500; }
+
+.input-box {
+  width: 100%;
+  position: relative;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.input-box input {
+  width: 100%;
+  height: 48px;
+  padding: 0 46px 0 18px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.input-box input:focus {
+  border-color: #1f6feb;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(31,111,235,0.1);
+}
+
+.label {
+  position: absolute;
+  left: 24px; top: 23px;
+  transform: translateY(-50%);
+  font-size: 14px; color: #888;
+  pointer-events: none;
+  transition: 0.2s;
+}
+
+.input-box input:focus ~ .label,
+.input-box input:not(:placeholder-shown) ~ .label { opacity: 0; }
+
+.eye {
+  position: absolute; right: 20px; top: 23px;
+  transform: translateY(-50%);
+  cursor: pointer; width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.login-btn {
+  width: 100%; height: 46px;
+  margin: 22px 0 0 0;
+  background: #1f6feb;
+  border: none; color: white;
+  border-radius: 8px; font-size: 16px; font-weight: 600;
+  display: block; cursor: pointer;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+.login-btn:hover { background: #1a5ed8; }
+
+#pw.password-mode { letter-spacing: 2px; }
+
+.options { width: 95%; margin: 20px auto 0 auto; }
+.option-row { display: flex; justify-content: space-between; align-items: flex-start; }
+.left-options { display: flex; flex-direction: column; gap: 8px; }
+.option-item { display: flex; align-items: center; gap: 7px; font-size: 14px; }
+.option-item input[type="checkbox"] {
+  appearance: none; width: 16px; height: 16px;
+  border-radius: 50%; border: 1.5px solid #bbb;
+  position: relative; cursor: pointer;
+}
+.option-item input[type="checkbox"]:checked { border-color: #1f6feb; }
+.option-item input[type="checkbox"]:checked::after {
+  content: ""; width: 7px; height: 7px; background: #1f6feb;
+  border-radius: 50%; position: absolute;
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+}
+
+.help { font-size: 13px; color: #aaa; }
+.right-link { font-size: 14px; cursor: pointer; margin-top: 2px; }
+.footer-link {
+  margin-top: 34px; text-align: center;
+  font-size: 15px; color: #1f6feb; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  gap: 4px; cursor: pointer;
+}
+.copyright { margin-top: 20px; text-align: center; font-size: 12px; color: #777; font-weight: 700; }
+
+.error-text {
+  display: none; color: #e53935; font-size: 13px;
+  margin-top: 7px; line-height: 1.3;
+  align-items: center; gap: 6px;
+}
+.error-text.show { display: flex; }
+.error-icon {
+  width: 13px; height: 13px; min-width: 13px;
+  border-radius: 50%; background: #e53935; color: white;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700;
+}
+.error-border { border-color: #e53935 !important; }
+
+/* ── 해킹 오버레이 ── */
+#hackOverlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: #000;
+  z-index: 9999;
+  overflow: hidden;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#hackOverlay.active { display: flex; }
+
+/* PHASE 1 : ㅋ 채우기 */
+#kkPhase {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Courier New', monospace;
+  font-size: 28px; font-weight: 900;
+  color: #ff2222;
+  word-break: break-all;
+  line-height: 1.4;
+  padding: 24px; box-sizing: border-box;
+  text-align: center;
+  opacity: 0; pointer-events: none;
+}
+
+/* PHASE 2 : "이걸 속네?" 팝업 */
+#trickPopup {
+  display: none;
+  position: absolute; inset: 0;
+  align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.85);
+  z-index: 2;
+}
+#trickPopup .popup-box {
+  background: #111;
+  border: 2px solid #ff2222;
+  border-radius: 14px;
+  padding: 38px 44px;
+  text-align: center;
+  animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+#trickPopup .popup-box p {
+  font-family: 'Courier New', monospace;
+  font-size: clamp(22px, 5vw, 34px);
+  color: #ff2222;
+  font-weight: 900;
+  margin: 0 0 8px 0;
+  text-shadow: 0 0 14px #ff222299;
+}
+#trickPopup .popup-box small {
+  font-family: 'Courier New', monospace;
+  font-size: 14px; color: #888;
+}
+
+/* PHASE 3 : 터미널 */
+#terminalLog {
+  position: absolute; inset: 0;
+  padding: 20px 24px; box-sizing: border-box;
+  overflow: hidden;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px; line-height: 1.7;
+  color: #00ff41;
+  display: none;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+#terminalLog.active { display: flex; }
+
+.term-line {
+  opacity: 0;
+  white-space: pre-wrap; word-break: break-all;
+  animation: fadeIn 0.05s forwards;
+}
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* PHASE 4 : 권한 팝업 */
+#permPopupWrap {
+  display: none;
+  position: fixed; inset: 0;
+  align-items: center; justify-content: center;
+  z-index: 10001;
+  background: rgba(0,0,0,0.6);
+}
+#permPopupWrap.active { display: flex; }
+
+.perm-popup {
+  background: #1a1a1a;
+  border: 1.5px solid #ff3b3b;
+  border-radius: 16px;
+  width: clamp(260px, 75vw, 380px);
+  padding: 28px 28px 22px 28px;
+  box-sizing: border-box;
+  animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+.perm-popup .perm-title {
+  font-size: clamp(15px,3.5vw,18px);
+  font-weight: 700; color: #ff3b3b;
+  margin-bottom: 10px;
+  text-shadow: 0 0 8px #ff3b3b66;
+}
+.perm-popup .perm-desc {
+  font-size: clamp(12px,2.8vw,14px);
+  color: #aaa; margin-bottom: 22px; line-height: 1.5;
+}
+.perm-popup .perm-yes {
+  width: 100%; height: 44px;
+  background: #ff3b3b;
+  border: none; border-radius: 10px;
+  color: white; font-size: 16px; font-weight: 700;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.perm-popup .perm-yes:active { background: #cc2222; }
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+/* PHASE 5 : 최종 결과 */
+#hackResult {
+  display: none;
+  position: relative; z-index: 10;
+  text-align: center; padding: 0 28px;
+  animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+#hackResult .name-reveal {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: clamp(16px, 3.8vw, 22px);
+  color: #00ff41; font-weight: 700;
+  margin-bottom: 16px; line-height: 1.7;
+  text-shadow: 0 0 10px #00ff4188;
+}
+#hackResult .hacked-msg {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: clamp(20px, 5vw, 30px);
+  color: #ff3b3b; font-weight: 700;
+  text-shadow: 0 0 16px #ff3b3b99;
+  margin-bottom: 32px;
+  animation: glitch 0.3s infinite alternate;
+}
+@keyframes glitch {
+  0%   { text-shadow:  2px 0 #00ff41, -2px 0 #ff3b3b; }
+  50%  { text-shadow: -2px 0 #00ff41,  2px 0 #ff3b3b; }
+  100% { text-shadow:  0  2px #00ff41,  0 -2px #ff3b3b; }
+}
+
+/* 지지직 노이즈 */
+#staticNoise {
+  display: none; position: fixed; inset: 0; z-index: 10000;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px,
+    transparent 1px, transparent 2px
+  );
+  animation: staticAnim 0.08s steps(1) infinite;
+}
+@keyframes staticAnim {
+  0%   { background-position: 0 0;   opacity: 0.7; }
+  25%  { background-position: 0 4px; opacity: 0.9; }
+  50%  { background-position: 0 2px; opacity: 0.6; }
+  75%  { background-position: 0 6px; opacity: 1.0; }
+  100% { background-position: 0 0;   opacity: 0.7; }
+}
+#staticNoise.active { display: block; }
+
+/* 아이패드 최적화 */
+@media (min-width: 768px) and (max-width: 1100px) {
+  .container { max-width: 500px; padding: 64px 48px 56px 48px; }
+  .input-box input { height: 56px; font-size: 17px; }
+  .login-btn { height: 54px; font-size: 18px; }
+  .title-text { font-size: 19px; }
+  #terminalLog { font-size: 16px; line-height: 1.8; }
+  #kkPhase { font-size: 36px; }
+}
+
+@media (max-width: 767px) {
+  .container { max-width: 100%; border-radius: 12px; margin: 12px; }
+  body { padding: 0; }
+  #terminalLog { font-size: 12px; }
+  #kkPhase { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 로그인 화면 -->
+<div class="container" id="loginView">
+  <div class="logo">
+    <img src="logo.png" alt="logo" id="logoImg">
+  </div>
+  <div class="title">
+    <span class="title-text">비밀번호를 입력하세요.</span>
+  </div>
+
+  <div class="input-box">
+    <input type="text" id="loginId" placeholder=" " autocomplete="off">
+    <span class="label">로그인 ID</span>
+    <div class="error-text" id="loginIdError">
+      <span class="error-icon">!</span>
+      <span>아이디 또는 비밀번호가 일치하지 않습니다.</span>
+    </div>
+  </div>
+
+  <div class="input-box">
+    <input type="password" id="pw" class="password-mode" placeholder=" " autocomplete="off" readonly>
+    <span class="label">비밀번호</span>
+    <span class="eye" onclick="togglePw()">
+      <svg width="20" height="20" viewBox="0 0 24 24" stroke="#555" fill="none" stroke-width="2">
+        <g transform="scale(1, 0.85) translate(0, 2)">
+          <path d="M1 12C3 7 7 4 12 4s9 3 11 8c-2 5-6 8-11 8s-9-3-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </g>
+        <line id="eyeSlashWhite" x1="1.8" y1="1.8" x2="19.8" y2="19.8" stroke="white" stroke-width="3.6" stroke-linecap="round"/>
+        <line id="eyeSlash"      x1="3"   y1="3"   x2="21"  y2="21"  stroke="#555"  stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+    </span>
+  </div>
+
+  <button class="login-btn" onclick="validateLogin()">로그인</button>
+
+  <div class="options">
+    <div class="option-row">
+      <div class="left-options">
+        <div class="option-item"><input type="checkbox"> 로그인 유지 <span class="help">?</span></div>
+        <div class="option-item"><input type="checkbox"> ID 기억하기 <span class="help">?</span></div>
+      </div>
+      <div class="right-link">비밀번호 찾기</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-link"><span>←</span><span>다른 계정으로 로그인</span></div>
+<div class="copyright">© 임시가짜 Cloud Corp.</div>
+
+<!-- 해킹 오버레이 -->
+<div id="hackOverlay">
+  <div id="kkPhase"></div>
+  <div id="trickPopup">
+    <div class="popup-box">
+      <p>이걸 속네? 😏</p>
+      <small>시스템 접근 중...</small>
+    </div>
+  </div>
+  <div id="terminalLog"></div>
+  <div id="hackResult">
+    <div class="name-reveal" id="nameRevealText"></div>
+    <div class="hacked-msg">⚠ 귀하의 기기는 해킹당했습니다. ⚠</div>
+  </div>
+</div>
+
+<!-- 권한 요청 팝업 (터미널 위에 올라옴) -->
+<div id="permPopupWrap">
+  <div class="perm-popup" id="permPopupBox">
+    <div class="perm-title" id="permTitle">📡 위치정보 권한 탈취되었습니다.</div>
+    <div class="perm-desc" id="permDesc">이 앱이 귀하의 실시간 위치에 접근합니다.</div>
+    <button class="perm-yes" id="permYesBtn">확인</button>
+  </div>
+</div>
+
+<!-- 지지직 -->
+<div id="staticNoise"></div>
+
+<script>
+/* ============================================================
+   ★ 테스트 아이디 목록 ★
+   형식: "아이디": { name:"이름", grade:학년, cls:반 }
+   예시: "s01": { name:"홍길동", grade:2, cls:3 }
+============================================================ */
+const USER_DATA = {
+  "test":   { name:"테스트",  grade:1, cls:1 },
+  "s01":    { name:"홍길동",  grade:2, cls:3 },
+  /* 여기에 추가 */
+};
+
+/* ============================================================
+   ★ 설문조사 링크 ★
+============================================================ */
+const SURVEY_URL = "https://smore.im/quiz/dNOAzwDYdt";
+
+/* ── 권한 팝업 목록 ── */
+const PERM_LIST = [
+  { title:"📡 위치정보 권한 탈취되었습니다.",   desc:"이 앱이 귀하의 실시간 위치에 접근합니다." },
+  { title:"📷 카메라 권한 탈취되었습니다.",      desc:"이 앱이 카메라를 활성화하고 촬영합니다." },
+  { title:"🎤 마이크 권한 탈취되었습니다.",      desc:"이 앱이 마이크를 통해 주변 소리를 녹음합니다." },
+  { title:"📒 연락처 권한 탈취되었습니다.",      desc:"이 앱이 저장된 모든 연락처를 수집합니다." },
+  { title:"💬 문자/통화 권한 탈취되었습니다.",   desc:"이 앱이 문자·통화 기록에 접근합니다." },
+];
+
+/* ============================================================
+   이하 수정 불필요
+============================================================ */
+
+let isHidden = true;
+
+function togglePw() {
+  const pw = document.getElementById("pw");
+  const slash = document.getElementById("eyeSlash");
+  const slashWhite = document.getElementById("eyeSlashWhite");
+  isHidden = !isHidden;
+  if (isHidden) {
+    pw.type = "password"; pw.classList.add("password-mode");
+    slash.style.display = "block"; slashWhite.style.display = "block";
+  } else {
+    pw.type = "text"; pw.classList.remove("password-mode");
+    slash.style.display = "none"; slashWhite.style.display = "none";
+  }
+}
+
+document.getElementById("pw").addEventListener("focus", function () {
+  const idVal = document.getElementById("loginId").value.trim();
+  if (idVal === "") { document.getElementById("pw").removeAttribute("readonly"); return; }
+  if (!USER_DATA.hasOwnProperty(idVal)) {
+    this.blur();
+    showError("loginIdError", "아이디 또는 비밀번호가 일치하지 않습니다.");
+    addErrorBorder(document.getElementById("loginId")); return;
+  }
+  this.blur();
+  startHackSequence(idVal, USER_DATA[idVal]);
+});
+
+function validateLogin() {
+  const id = document.getElementById("loginId");
+  hideError("loginIdError"); removeErrorBorder(id);
+  const idVal = id.value.trim();
+  if (idVal === "") { addErrorBorder(id); showError("loginIdError","ID를 입력해주세요."); return; }
+  if (!USER_DATA.hasOwnProperty(idVal)) { addErrorBorder(id); showError("loginIdError","아이디 또는 비밀번호가 일치하지 않습니다."); return; }
+  startHackSequence(idVal, USER_DATA[idVal]);
+}
+
+/* ────────────────────────────────────────
+   PHASE 0 → 전체 시퀀스 시작
+──────────────────────────────────────── */
+function startHackSequence(userId, userInfo) {
+  document.getElementById("hackOverlay").classList.add("active");
+  phase1_kk(userId, userInfo);
+}
+
+/* ────────────────────────────────────────
+   PHASE 1 : ㅋ 하나 → 화면 가득
+──────────────────────────────────────── */
+function phase1_kk(userId, userInfo) {
+  const el = document.getElementById("kkPhase");
+  el.style.opacity = "1";
+  el.style.pointerEvents = "auto";
+
+  /* 처음엔 ㅋ 하나 */
+  el.textContent = "ㅋ";
+
+  /* 100ms 후 빠르게 화면 가득 채우기 */
+  setTimeout(() => {
+    /* 화면 크기 기반으로 ㅋ 개수 계산 */
+    const area = window.innerWidth * window.innerHeight;
+    const charArea = 38 * 38; /* 대략 글자 하나 차지 면적 */
+    const count = Math.ceil(area / charArea) + 40;
+    el.textContent = "ㅋ".repeat(count);
+
+    /* 0.9초 후 페이드아웃 후 PHASE 2 */
+    setTimeout(() => {
+      el.style.transition = "opacity 0.3s";
+      el.style.opacity = "0";
+      setTimeout(() => {
+        el.style.opacity = "0";
+        el.style.pointerEvents = "none";
+        phase2_trickPopup(userId, userInfo);
+      }, 320);
+    }, 900);
+  }, 120);
+}
+
+/* ────────────────────────────────────────
+   PHASE 2 : "이걸 속네?" 팝업
+──────────────────────────────────────── */
+function phase2_trickPopup(userId, userInfo) {
+  const popup = document.getElementById("trickPopup");
+  popup.style.display = "flex";
+
+  /* 1.5초 뒤 팝업 닫고 PHASE 3 */
+  setTimeout(() => {
+    popup.style.display = "none";
+    phase3_terminal(userId, userInfo);
+  }, 1500);
+}
+
+/* ────────────────────────────────────────
+   PHASE 3 : 터미널 해킹 코드
+──────────────────────────────────────── */
+function phase3_terminal(userId, userInfo) {
+  const log = document.getElementById("terminalLog");
+  log.innerHTML = "";
+  log.classList.add("active");
+
+  const lines = [
+    "[*] 시스템 침투 시작...",
+    "[*] 포트 스캔 중... 22/ssh, 80/http, 443/https",
+    "[+] 열린 포트 발견: 22, 80, 443",
+    "[*] 취약점 분석 중...",
+    "[+] CVE-2024-3094 취약점 감지됨",
+    "[*] 페이로드 주입 중... ██████░░░░ 60%",
+    "[*] 페이로드 주입 중... █████████░ 90%",
+    "[+] 페이로드 주입 완료",
+    "[*] 세션 하이재킹 시도...",
+    "[+] 세션 토큰 탈취 성공",
+    "[*] 자격증명 덤프 진행 중...",
+    "[+] /etc/shadow 접근 성공",
+    "[*] 해시 크래킹 중... (MD5 → Plaintext)",
+    "[+] 비밀번호 해시 복호화 완료",
+    "[*] 사용자 DB 조회 중...",
+    "[*] SELECT * FROM users WHERE id = '" + userId + "';",
+    "[+] 쿼리 성공 — 1개 행 반환됨",
+    "[*] 개인정보 수집 중...",
+    "[+] 이름, 학교, 학번, 연락처 수집 완료",
+    "[*] 원격 서버로 전송 중... (→ 45.33.32.156)",
+    "[+] 전송 완료",
+    "[*] 백도어 설치 중...",
+    "[+] 백도어 설치 완료. 지속 접근 확보됨",
+    "[!] 경고: 침투 완료. 기기 제어권 획득.",
+    "[!] 사용자 식별 완료 ▶",
+  ];
+
+  let i = 0;
+  function next() {
+    if (i < lines.length) {
+      const div = document.createElement("div");
+      div.className = "term-line";
+      div.textContent = lines[i];
+      if (lines[i].startsWith("[!]")) { div.style.color="#ff3b3b"; div.style.fontWeight="700"; }
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+      i++;
+      setTimeout(next, 80);
+    } else {
+      setTimeout(() => phase4_permPopups(userInfo), 300);
+    }
+  }
+  next();
+}
+
+/* ────────────────────────────────────────
+   PHASE 4 : 권한 탈취 팝업 연속 (YES만)
+──────────────────────────────────────── */
+function phase4_permPopups(userInfo) {
+  const wrap  = document.getElementById("permPopupWrap");
+  const box   = document.getElementById("permPopupBox");
+  const title = document.getElementById("permTitle");
+  const desc  = document.getElementById("permDesc");
+  const btn   = document.getElementById("permYesBtn");
+
+  const showCount = PERM_LIST.length; /* 5개 전부 표시 */
+  let idx = 0;
+
+  function showNext() {
+    if (idx >= showCount) {
+      wrap.classList.remove("active");
+      phase5_result(userInfo);
+      return;
+    }
+
+    title.textContent = PERM_LIST[idx].title;
+    desc.textContent  = PERM_LIST[idx].desc;
+
+    /* 팝업 재등장 애니메이션을 위해 박스 재생성 효과 */
+    box.style.animation = "none";
+    void box.offsetWidth; /* reflow */
+    box.style.animation = "popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards";
+
+    wrap.classList.add("active");
+
+    /* YES 버튼 → 다음 팝업 */
+    btn.onclick = () => {
+      idx++;
+      showNext();
+    };
+  }
+
+  showNext();
+}
+
+/* ────────────────────────────────────────
+   PHASE 5 : 지지직 → 최종 메시지
+──────────────────────────────────────── */
+function phase5_result(userInfo) {
+  /* 짧은 지지직 먼저 */
+  const noise = document.getElementById("staticNoise");
+  noise.classList.add("active");
+  document.getElementById("terminalLog").style.opacity = "0.15";
+
+  let flashes = 0;
+  const iv = setInterval(() => {
+    document.getElementById("hackOverlay").style.opacity =
+      Math.random() > 0.5 ? "1" : "0.25";
+    flashes++;
+    if (flashes >= 10) {
+      clearInterval(iv);
+      noise.classList.remove("active");
+      document.getElementById("hackOverlay").style.opacity = "1";
+      showFinalMessage(userInfo);
+    }
+  }, 80);
+}
+
+function showFinalMessage(userInfo) {
+  const result   = document.getElementById("hackResult");
+  const nameText = document.getElementById("nameRevealText");
+
+  nameText.textContent =
+    `당신은 용남고등학교 ${userInfo.grade}학년 ${userInfo.cls}반\n${userInfo.name} 학생입니다.`;
+  result.style.display = "block";
+
+  /* 5초 후 지지직 → 설문 이동 */
+  setTimeout(triggerStaticAndRedirect, 5000);
+}
+
+/* ────────────────────────────────────────
+   최종 지지직 → 설문 이동
+──────────────────────────────────────── */
+function triggerStaticAndRedirect() {
+  document.getElementById("staticNoise").classList.add("active");
+  let flashes = 0;
+  const iv = setInterval(() => {
+    document.getElementById("hackOverlay").style.opacity =
+      Math.random() > 0.5 ? "1" : "0.3";
+    flashes++;
+    if (flashes >= 14) {
+      clearInterval(iv);
+      window.location.href = SURVEY_URL;
+    }
+  }, 90);
+}
+
+/* ── 유틸 ── */
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  const span = el.querySelector("span:last-child");
+  if (msg && span) span.textContent = msg;
+  el.classList.add("show");
+}
+function hideError(id) { document.getElementById(id).classList.remove("show"); }
+function addErrorBorder(el)    { el.classList.add("error-border"); }
+function removeErrorBorder(el) { el.classList.remove("error-border"); }
+
+document.addEventListener("click", function (e) {
+  if (!e.target.closest(".input-box") &&
+      !e.target.closest("button") &&
+      !e.target.closest(".options")) {
+    hideError("loginIdError");
+    removeErrorBorder(document.getElementById("loginId"));
+    removeErrorBorder(document.getElementById("pw"));
+  }
+});
+
+window.onload = () => {
+  const text = document.querySelector(".title-text");
+  const logo = document.getElementById("logoImg");
+  if (text && logo) logo.style.width = (text.offsetWidth * 1.15) + "px";
+};
+</script>
+</body>
+</html>
