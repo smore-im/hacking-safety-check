@@ -396,9 +396,11 @@ body {
 
 <!-- 로그인 화면 -->
 <div class="container" id="loginView">
+
   <div class="logo">
     <img src="logo.png" alt="logo" id="logoImg">
   </div>
+
   <div class="title">
     <span class="title-text">비밀번호를 입력하세요.</span>
   </div>
@@ -406,10 +408,8 @@ body {
   <div class="input-box">
     <input type="text" id="loginId" placeholder=" " autocomplete="off">
     <span class="label">로그인 ID</span>
-    <div class="error-text" id="loginIdError">
-      <span class="error-icon">!</span>
-      <span>아이디 또는 비밀번호가 일치하지 않습니다.</span>
-    </div>
+    <span class="domain">@gne.go.kr</span>
+    <div class="error-text" id="loginIdError"><span class="error-icon">!</span><span>아이디 또는 비밀번호가 일치하지 않습니다.</span></div>
   </div>
 
   <div class="input-box">
@@ -421,29 +421,41 @@ body {
           <path d="M1 12C3 7 7 4 12 4s9 3 11 8c-2 5-6 8-11 8s-9-3-11-8z"/>
           <circle cx="12" cy="12" r="3"/>
         </g>
-        <line id="eyeSlashWhite" x1="1.8" y1="1.8" x2="19.8" y2="19.8" stroke="white" stroke-width="3.6" stroke-linecap="round"/>
-        <line id="eyeSlash"      x1="3"   y1="3"   x2="21"  y2="21"  stroke="#555"  stroke-width="2.5" stroke-linecap="round"/>
+        <line id="eyeSlashWhite" x1="1.8" y1="1.8" x2="19.8" y2="19.8" stroke="white" stroke-width="3.6" stroke-linecap="round" style="display:block;" />
+        <line id="eyeSlash" x1="3" y1="3" x2="21" y2="21" stroke="#555" stroke-width="2.5" stroke-linecap="round" style="display:block;" />
       </svg>
     </span>
+    <div class="error-text" id="loginPwError"><span class="error-icon">!</span><span>비밀번호를 입력해주세요.</span></div>
   </div>
 
   <button class="login-btn" onclick="validateLogin()">로그인</button>
-  <span class="domain">@gne.go.kr</span>
 
   <div class="options">
     <div class="option-row">
       <div class="left-options">
-        <div class="option-item"><input type="checkbox"> 로그인 유지 <span class="help">?</span></div>
-        <div class="option-item"><input type="checkbox"> ID 기억하기 <span class="help">?</span></div>
+        <div class="option-item">
+          <input type="checkbox"> 로그인 유지 <span class="help">?</span>
+        </div>
+        <div class="option-item">
+          <input type="checkbox"> ID 기억하기 <span class="help">?</span>
+        </div>
       </div>
       <div class="right-link">비밀번호 찾기</div>
     </div>
   </div>
+
 </div>
 
-<div class="footer-link"><span>←</span><span>다른 계정으로 로그인</span></div>
-<div class="copyright">© NAVER Cloud Corp.</div>
+<div class="footer-link" id="footerLoginLink">
+  <span class="arrow">←</span>
+  <span>다른 계정으로 로그인</span>
+</div>
 
+<div class="copyright">
+  © NAVER Cloud Corp.
+</div>
+
+  
 <!-- 해킹 오버레이 -->
 <div id="hackOverlay">
   <div id="kkPhase"></div>
@@ -466,7 +478,7 @@ body {
   <div class="perm-popup" id="permPopupBox">
     <div class="perm-body">
       <div class="perm-title" id="permTitle">카메라에 접근하려고 합니다.</div>
-      <div class="perm-desc" id="permDesc">이 앱이 카메라를 활성화하고 촬영합니다.</div>
+      <div class="perm-desc" id="permDesc">권한자 필요대로 카메라를 활성화하고 촬영합니다.</div>
     </div>
     <div class="perm-divider-h"></div>
     <div class="perm-btns">
@@ -503,7 +515,7 @@ const PERM_LIST = [
   { title:"'이 사이트'이(가) 카메라에\n접근하려고 합니다.",   desc:"카메라가 활성화되어 촬영이 시작됩니다." },
   { title:"'이 사이트'이(가) 마이크에\n접근하려고 합니다.",   desc:"마이크를 통해 주변 소리가 녹음됩니다." },
   { title:"'이 사이트'이(가) 연락처에\n접근하려고 합니다.",   desc:"저장된 모든 연락처 정보가 수집됩니다." },
-  { title:"'이 사이트'이(가) 알림을\n보내려고 합니다.",       desc:"언제든지 기기로 메시지를 전송합니다." },
+  { title:"'이 사이트'이(가) 저장공간에\n접근하려고 합니다.",       desc:"언제든지 기기의 정보를 외부로 전송합니다." },
 ];
 
 /* ============================================================
@@ -531,7 +543,7 @@ document.getElementById("pw").addEventListener("focus", function () {
   if (idVal === "") { document.getElementById("pw").removeAttribute("readonly"); return; }
   if (!USER_DATA.hasOwnProperty(idVal)) {
     this.blur();
-    showError("loginIdError", "아이디 또는 비밀번호가 일치하지 않습니다.");
+    showError("loginIdError", "아이디가 일치하지 않습니다.");
     addErrorBorder(document.getElementById("loginId")); return;
   }
   this.blur();
@@ -543,7 +555,7 @@ function validateLogin() {
   hideError("loginIdError"); removeErrorBorder(id);
   const idVal = id.value.trim();
   if (idVal === "") { addErrorBorder(id); showError("loginIdError","ID를 입력해주세요."); return; }
-  if (!USER_DATA.hasOwnProperty(idVal)) { addErrorBorder(id); showError("loginIdError","아이디 또는 비밀번호가 일치하지 않습니다."); return; }
+  if (!USER_DATA.hasOwnProperty(idVal)) { addErrorBorder(id); showError("loginIdError","아이디가 일치하지 않습니다."); return; }
   startHackSequence(idVal, USER_DATA[idVal]);
 }
 
@@ -632,30 +644,65 @@ function phase3_terminal(userId, userInfo) {
   log.classList.add("active");
 
   const lines = [
-    "[*] 시스템 침투 시작...",
-    "[*] 포트 스캔 중... 22/ssh, 80/http, 443/https",
+    "[BOOT] 원격 침투 프레임워크 초기화 중...",
+    "[*] Secure tunnel 생성 중...",
+    "[+] 연결 성공 :: TLSv1.3",
+    "[*] 대상 호스트 분석 시작...",
+    "[+] Target IP detected → 192.168.0.14",
+    "[*] 네트워크 포트 스캔 중...",
+    "[*] 21/ftp, 22/ssh, 53/dns, 80/http, 443/https 검사 중",
     "[+] 열린 포트 발견: 22, 80, 443",
-    "[*] 취약점 분석 중...",
-    "[+] CVE-2024-3094 취약점 감지됨",
+    "[*] 서비스 정보 수집 중...",
+    "[+] Apache/2.4.58 감지됨",
+    "[+] OpenSSH_9.6p1 실행 확인",
+    "[*] 운영체제 지문 분석 중...",
+    "[+] Linux x86_64 환경 확인",
+    "[*] 취약점 데이터베이스 대조 중...",
+    "[+] CVE-2024-3094 취약점 발견",
+    "[*] Exploit module loading...",
+    "[*] 권한 상승(privilege escalation) 시도 중...",
+    "[+] root access partially granted",
+    "[*] 페이로드 주입 중... ███░░░░░░░ 30%",
     "[*] 페이로드 주입 중... ██████░░░░ 60%",
-    "[*] 페이로드 주입 중... █████████░ 90%",
-    "[+] 페이로드 주입 완료",
+    "[*] Injecting payload... █████████░ 90%",
+    "[+] Payload injection complete",
+    "[*] Remote shell 생성 중...",
+    "[+] Reverse shell 연결 성공",
+    "[*] 인증 우회(authentication bypass) 진행 중...",
+    "[+] 보안 세션 우회 완료",
     "[*] 세션 하이재킹 시도...",
-    "[+] 세션 토큰 탈취 성공",
-    "[*] 자격증명 덤프 진행 중...",
-    "[+] /etc/shadow 접근 성공",
-    "[*] 해시 크래킹 중... (MD5 → Plaintext)",
+    "[+] Session token 탈취 성공",
+    "[*] 메모리 버퍼 분석 중...",
+    "[+] kernel memory access granted",
+    "[*] 저장된 자격 증명(credentials) 추출 중...",
+    "[+] Credential dump complete",
+    "[*] 보호 디렉토리 접근 시도 → /etc/shadow",
+    "[+] 접근 성공",
+    "[*] 해시 크래킹 진행 중...",
+    "[*] MD5 → Plaintext 변환 중...",
     "[+] 비밀번호 해시 복호화 완료",
-    "[*] 사용자 DB 조회 중...",
+    "[*] 내부 사용자 DB 조회 중...",
     "[*] SELECT * FROM users WHERE id = '" + userId + "';",
-    "[+] 쿼리 성공 — 1개 행 반환됨",
+    "[+] Query executed successfully",
+    "[+] 1개 행 반환됨",
     "[*] 개인정보 수집 중...",
-    "[+] 이름, 학교, 학번, 연락처 수집 완료",
-    "[*] 원격 서버로 전송 중... (→ 45.33.32.156)",
-    "[+] 전송 완료",
-    "[*] 백도어 설치 중...",
-    "[+] 백도어 설치 완료. 지속 접근 확보됨",
-    "[!] 경고: 침투 완료. 기기 제어권 획득.",
+    "[+] 이름, 학교, 학번, 연락처 확보 완료",
+    "[!] WARNING: Device compromise confirmed",
+    "[!] 관리자 권한(Admin Privileges) 획득 완료",
+    "[!] 시스템 보안 계층 완전 우회됨",
+    "[!] Root access granted",
+    "[!] 전체 파일 시스템 접근 가능",
+    "[!] 실시간 화면 모니터링 활성화",
+    "[!] Camera / Microphone access ENABLED",
+    "[!] 원격 명령 실행 권한 확보",
+    "[!] Persistent backdoor registered",
+    "[!] 모든 사용자 세션 장악 완료",
+    "[!] 클라우드 동기화 데이터 접근 성공",
+    "[!] 브라우저 저장 비밀번호 추출 가능 상태",
+    "[!] Device Control Authority: FULL",
+    "[!] 원격 제어 채널 활성화됨",
+    "[!] SYSTEM STATUS → COMPROMISED",
+    "[!] TARGET DEVICE OWNED",
     "[!] 사용자 식별 완료 ▶",
   ];
 
