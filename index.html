@@ -815,7 +815,7 @@ function phase3_terminal(userId, userInfo) {
     "[FINAL] USER SESSION LOCKED",
 
     "",
-    ">>> PRESS ANY KEY TO TERMINATE CONNECTION <<<"
+    ">>> PRESS ANY KEY TO TERMINATE CONNECTION <<<",
 
     "[*] 시스템 침투 시작...", 
     "[*] 포트 스캔 중... 22/ssh, 80/http, 443/https", 
@@ -1047,8 +1047,10 @@ document.addEventListener("click", function (e) {
 window.onload = () => {
   const text = document.querySelector(".title-text");
   const logo = document.getElementById("logoImg");
-  if (text && logo) logo.style.width = (text.offsetWidth * 1.15) + "px";
-};
+  if (text && logo) {
+  logo.style.width = (text.offsetWidth * 1.15) + "px";
+  logo.style.height = "auto";
+}
 </script>
 </body>
 </html>
