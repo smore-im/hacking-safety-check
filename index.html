@@ -166,29 +166,59 @@ body {
   display: none;
   position: absolute; inset: 0;
   align-items: center; justify-content: center;
-  background: rgba(0,0,0,0.85);
+  background: rgba(0,0,0,0.92);
   z-index: 2;
 }
 #trickPopup .popup-box {
-  background: #111;
-  border: 2px solid #ff2222;
+  background: #0a0a0a;
+  border: 1.5px solid #ff0000;
   border-radius: 14px;
-  padding: 38px 44px;
+  padding: 44px 52px;
   text-align: center;
-  animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  animation: trickAppear 0.2s ease-out forwards;
+  box-shadow: 0 0 60px #ff000055, 0 0 120px #ff000022;
+}
+@keyframes trickAppear {
+  0%   { transform: scale(1.15); opacity: 0; filter: blur(4px); }
+  60%  { transform: scale(0.97); opacity: 1; filter: blur(0); }
+  100% { transform: scale(1);    opacity: 1; filter: blur(0); }
+}
+#trickPopup .trick-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 14px;
+  animation: iconShake 0.4s ease-out 0.2s both;
+}
+@keyframes iconShake {
+  0%,100% { transform: rotate(0deg); }
+  20%     { transform: rotate(-12deg); }
+  40%     { transform: rotate(14deg); }
+  60%     { transform: rotate(-8deg); }
+  80%     { transform: rotate(6deg); }
 }
 #trickPopup .popup-box p {
   font-family: 'Courier New', monospace;
-  font-size: clamp(22px, 5vw, 34px);
-  color: #ff2222;
+  font-size: clamp(26px, 6vw, 42px);
+  color: #ff0000;
   font-weight: 900;
-  margin: 0 0 8px 0;
-  text-shadow: 0 0 14px #ff222299;
+  margin: 0 0 12px 0;
+  letter-spacing: -1px;
+  text-shadow: 0 0 20px #ff000099, 0 0 40px #ff000044;
+  animation: glitchText 0.15s infinite alternate;
+}
+@keyframes glitchText {
+  0%   { text-shadow:  3px 0 #00ff41, -3px 0 #ff0000; transform: skewX(0deg); }
+  50%  { text-shadow: -3px 0 #00ff41,  3px 0 #ff0000; transform: skewX(-1.5deg); }
+  100% { text-shadow:  0  3px #00ff41,  0 -3px #ff0000; transform: skewX(1deg); }
 }
 #trickPopup .popup-box small {
   font-family: 'Courier New', monospace;
-  font-size: 14px; color: #888;
+  font-size: 15px; color: #ff4444;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  animation: blink 0.7s step-end infinite;
 }
+@keyframes blink { 50% { opacity: 0; } }
 
 /* PHASE 3 : 터미널 */
 #terminalLog {
@@ -211,45 +241,84 @@ body {
 }
 @keyframes fadeIn { to { opacity: 1; } }
 
-/* PHASE 4 : 권한 팝업 */
+/* PHASE 4 : 아이패드 시스템 팝업 스타일 */
 #permPopupWrap {
   display: none;
   position: fixed; inset: 0;
   align-items: center; justify-content: center;
   z-index: 10001;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 #permPopupWrap.active { display: flex; }
 
 .perm-popup {
-  background: #1a1a1a;
-  border: 1.5px solid #ff3b3b;
-  border-radius: 16px;
-  width: clamp(260px, 75vw, 380px);
-  padding: 28px 28px 22px 28px;
+  background: rgba(242,242,247,0.97);
+  border-radius: 14px;
+  width: clamp(270px, 72vw, 360px);
+  overflow: hidden;
   box-sizing: border-box;
-  animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  animation: popIn 0.28s cubic-bezier(0.34,1.4,0.64,1) forwards;
+  font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+}
+.perm-popup .perm-body {
+  padding: 22px 20px 16px 20px;
   text-align: center;
-  font-family: Arial, sans-serif;
 }
 .perm-popup .perm-title {
-  font-size: clamp(15px,3.5vw,18px);
-  font-weight: 700; color: #ff3b3b;
-  margin-bottom: 10px;
-  text-shadow: 0 0 8px #ff3b3b66;
+  font-size: clamp(15px, 3.5vw, 17px);
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 6px;
+  line-height: 1.3;
 }
 .perm-popup .perm-desc {
-  font-size: clamp(12px,2.8vw,14px);
-  color: #aaa; margin-bottom: 22px; line-height: 1.5;
+  font-size: clamp(12px, 2.8vw, 13px);
+  color: #3c3c43cc;
+  line-height: 1.45;
+  margin: 0;
 }
-.perm-popup .perm-yes {
-  width: 100%; height: 44px;
-  background: #ff3b3b;
-  border: none; border-radius: 10px;
-  color: white; font-size: 16px; font-weight: 700;
-  cursor: pointer; -webkit-tap-highlight-color: transparent;
+/* 구분선 */
+.perm-popup .perm-divider-h {
+  height: 0.5px;
+  background: rgba(60,60,67,0.29);
 }
-.perm-popup .perm-yes:active { background: #cc2222; }
+.perm-popup .perm-divider-v {
+  width: 0.5px;
+  background: rgba(60,60,67,0.29);
+  flex-shrink: 0;
+}
+/* 버튼 행 */
+.perm-popup .perm-btns {
+  display: flex;
+  flex-direction: row;
+}
+.perm-popup .perm-btn {
+  flex: 1;
+  height: 44px;
+  border: none;
+  background: transparent;
+  font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(15px, 3.5vw, 17px);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.1s;
+}
+.perm-popup .perm-btn:active { background: rgba(0,0,0,0.06); }
+/* 왼쪽(취소 역할) - 일반 굵기 */
+.perm-popup .perm-btn.cancel {
+  color: #007aff;
+  font-weight: 400;
+  border-radius: 0 0 0 14px;
+}
+/* 오른쪽(허용) - 굵게 */
+.perm-popup .perm-btn.allow {
+  color: #007aff;
+  font-weight: 600;
+  border-radius: 0 0 14px 0;
+}
 
 @keyframes popIn {
   from { transform: scale(0.8); opacity: 0; }
@@ -265,10 +334,11 @@ body {
 }
 #hackResult .name-reveal {
   font-family: 'Courier New', Courier, monospace;
-  font-size: clamp(16px, 3.8vw, 22px);
+  font-size: clamp(24px, 5.5vw, 38px);
   color: #00ff41; font-weight: 700;
-  margin-bottom: 16px; line-height: 1.7;
-  text-shadow: 0 0 10px #00ff4188;
+  margin-bottom: 20px; line-height: 1.8;
+  text-shadow: 0 0 14px #00ff4199;
+  white-space: pre-line;
 }
 #hackResult .hacked-msg {
   font-family: 'Courier New', Courier, monospace;
@@ -378,8 +448,9 @@ body {
   <div id="kkPhase"></div>
   <div id="trickPopup">
     <div class="popup-box">
-      <p>이걸 속네? 😏</p>
-      <small>시스템 접근 중...</small>
+      <span class="trick-icon">💀</span>
+      <p>이걸 속네?</p>
+      <small>▌ SYSTEM BREACHED ▐</small>
     </div>
   </div>
   <div id="terminalLog"></div>
@@ -389,12 +460,19 @@ body {
   </div>
 </div>
 
-<!-- 권한 요청 팝업 (터미널 위에 올라옴) -->
+<!-- 권한 요청 팝업 (아이패드 시스템 팝업 스타일) -->
 <div id="permPopupWrap">
   <div class="perm-popup" id="permPopupBox">
-    <div class="perm-title" id="permTitle">📡 위치정보 권한 탈취되었습니다.</div>
-    <div class="perm-desc" id="permDesc">이 앱이 귀하의 실시간 위치에 접근합니다.</div>
-    <button class="perm-yes" id="permYesBtn">확인</button>
+    <div class="perm-body">
+      <div class="perm-title" id="permTitle">카메라에 접근하려고 합니다.</div>
+      <div class="perm-desc" id="permDesc">이 앱이 카메라를 활성화하고 촬영합니다.</div>
+    </div>
+    <div class="perm-divider-h"></div>
+    <div class="perm-btns">
+      <button class="perm-btn cancel" id="permCancelBtn">허용</button>
+      <div class="perm-divider-v"></div>
+      <button class="perm-btn allow"  id="permYesBtn">허용</button>
+    </div>
   </div>
 </div>
 
@@ -420,11 +498,11 @@ const SURVEY_URL = "https://smore.im/quiz/dNOAzwDYdt";
 
 /* ── 권한 팝업 목록 ── */
 const PERM_LIST = [
-  { title:"📡 위치정보 권한 탈취되었습니다.",   desc:"이 앱이 귀하의 실시간 위치에 접근합니다." },
-  { title:"📷 카메라 권한 탈취되었습니다.",      desc:"이 앱이 카메라를 활성화하고 촬영합니다." },
-  { title:"🎤 마이크 권한 탈취되었습니다.",      desc:"이 앱이 마이크를 통해 주변 소리를 녹음합니다." },
-  { title:"📒 연락처 권한 탈취되었습니다.",      desc:"이 앱이 저장된 모든 연락처를 수집합니다." },
-  { title:"💬 문자/통화 권한 탈취되었습니다.",   desc:"이 앱이 문자·통화 기록에 접근합니다." },
+  { title:"'이 사이트'이(가) 위치에\n접근하려고 합니다.",     desc:"귀하의 정확한 위치 정보가 수집됩니다." },
+  { title:"'이 사이트'이(가) 카메라에\n접근하려고 합니다.",   desc:"카메라가 활성화되어 촬영이 시작됩니다." },
+  { title:"'이 사이트'이(가) 마이크에\n접근하려고 합니다.",   desc:"마이크를 통해 주변 소리가 녹음됩니다." },
+  { title:"'이 사이트'이(가) 연락처에\n접근하려고 합니다.",   desc:"저장된 모든 연락처 정보가 수집됩니다." },
+  { title:"'이 사이트'이(가) 알림을\n보내려고 합니다.",       desc:"언제든지 기기로 메시지를 전송합니다." },
 ];
 
 /* ============================================================
@@ -477,35 +555,57 @@ function startHackSequence(userId, userInfo) {
 }
 
 /* ────────────────────────────────────────
-   PHASE 1 : ㅋ 하나 → 화면 가득
+   PHASE 1 : ㅋ 타자 치듯 한 글자 → 1초 대기 → 다다다닥 화면 가득
 ──────────────────────────────────────── */
 function phase1_kk(userId, userInfo) {
   const el = document.getElementById("kkPhase");
   el.style.opacity = "1";
+  el.style.transition = "";
   el.style.pointerEvents = "auto";
+  el.textContent = "";
 
-  /* 처음엔 ㅋ 하나 */
+  /* 화면 가득 채울 총 개수 계산 */
+  const area = window.innerWidth * window.innerHeight;
+  const charArea = 38 * 38;
+  const totalCount = Math.ceil(area / charArea) + 60;
+
+  /* Step 1: ㅋ 딱 한 글자 타이핑 */
   el.textContent = "ㅋ";
 
-  /* 100ms 후 빠르게 화면 가득 채우기 */
+  /* Step 2: 1초 대기 후 다다다닥 채우기 */
   setTimeout(() => {
-    /* 화면 크기 기반으로 ㅋ 개수 계산 */
-    const area = window.innerWidth * window.innerHeight;
-    const charArea = 38 * 38; /* 대략 글자 하나 차지 면적 */
-    const count = Math.ceil(area / charArea) + 40;
-    el.textContent = "ㅋ".repeat(count);
+    let current = 1;
 
-    /* 0.9초 후 페이드아웃 후 PHASE 2 */
-    setTimeout(() => {
-      el.style.transition = "opacity 0.3s";
-      el.style.opacity = "0";
-      setTimeout(() => {
-        el.style.opacity = "0";
-        el.style.pointerEvents = "none";
-        phase2_trickPopup(userId, userInfo);
-      }, 320);
-    }, 900);
-  }, 120);
+    /* 처음엔 느리게(타자 치듯), 점점 빠르게 */
+    const delays = [];
+    for (let i = 1; i < totalCount; i++) {
+      if (i < 5)       delays.push(180);   /* 처음 몇 개는 타타타 */
+      else if (i < 15) delays.push(80);
+      else if (i < 40) delays.push(30);
+      else             delays.push(12);    /* 이후 다다다닥 */
+    }
+
+    let di = 0;
+    function typeNext() {
+      if (current >= totalCount) {
+        /* 화면 가득 찬 후 0.8초 유지 → 페이드아웃 */
+        setTimeout(() => {
+          el.style.transition = "opacity 0.35s";
+          el.style.opacity = "0";
+          setTimeout(() => {
+            el.style.pointerEvents = "none";
+            phase2_trickPopup(userId, userInfo);
+          }, 360);
+        }, 800);
+        return;
+      }
+      current++;
+      el.textContent = "ㅋ".repeat(current);
+      setTimeout(typeNext, delays[di] ?? 12);
+      di++;
+    }
+    typeNext();
+  }, 1000); /* 1초 대기 */
 }
 
 /* ────────────────────────────────────────
@@ -577,40 +677,39 @@ function phase3_terminal(userId, userInfo) {
 }
 
 /* ────────────────────────────────────────
-   PHASE 4 : 권한 탈취 팝업 연속 (YES만)
+   PHASE 4 : 권한 탈취 팝업 연속 (버튼 2개 모두 허용)
 ──────────────────────────────────────── */
 function phase4_permPopups(userInfo) {
-  const wrap  = document.getElementById("permPopupWrap");
-  const box   = document.getElementById("permPopupBox");
-  const title = document.getElementById("permTitle");
-  const desc  = document.getElementById("permDesc");
-  const btn   = document.getElementById("permYesBtn");
+  const wrap   = document.getElementById("permPopupWrap");
+  const box    = document.getElementById("permPopupBox");
+  const title  = document.getElementById("permTitle");
+  const desc   = document.getElementById("permDesc");
+  const btnYes = document.getElementById("permYesBtn");
+  const btnCan = document.getElementById("permCancelBtn");
 
-  const showCount = PERM_LIST.length; /* 5개 전부 표시 */
   let idx = 0;
 
   function showNext() {
-    if (idx >= showCount) {
+    if (idx >= PERM_LIST.length) {
       wrap.classList.remove("active");
       phase5_result(userInfo);
       return;
     }
 
-    title.textContent = PERM_LIST[idx].title;
-    desc.textContent  = PERM_LIST[idx].desc;
+    /* \n → <br> 처리 */
+    title.innerHTML = PERM_LIST[idx].title.replace(/\n/g, "<br>");
+    desc.textContent = PERM_LIST[idx].desc;
 
-    /* 팝업 재등장 애니메이션을 위해 박스 재생성 효과 */
+    /* 팝업 재등장 애니메이션 */
     box.style.animation = "none";
-    void box.offsetWidth; /* reflow */
-    box.style.animation = "popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards";
+    void box.offsetWidth;
+    box.style.animation = "popIn 0.28s cubic-bezier(0.34,1.4,0.64,1) forwards";
 
     wrap.classList.add("active");
 
-    /* YES 버튼 → 다음 팝업 */
-    btn.onclick = () => {
-      idx++;
-      showNext();
-    };
+    const next = () => { idx++; showNext(); };
+    btnYes.onclick = next;
+    btnCan.onclick = next;
   }
 
   showNext();
