@@ -33,15 +33,20 @@ body {
 }
 
 .logo { text-align: center; margin-bottom: 18px; }
-.logo img { display: block; margin: 0 auto; width: 160px; height: auto; }
+.logo img { display: block; margin: 0 auto; width: 220px; height: auto; }
 .title { text-align: center; margin-bottom: 38px; color:#222; }
 .title-text { display: inline-block; font-size: 18px; font-weight: 500; }
 
 .input-box {
   width: 100%;
   position: relative;
-  margin-bottom: 12px;
+  margin-bottom: 0;
   display: block;
+}
+
+.input-wrap {
+  width: 100%;
+  margin-bottom: 12px;
 }
 
 .input-box input {
@@ -141,7 +146,7 @@ body {
 
 .error-text {
   display: none; color: #e53935; font-size: 13px;
-  margin-top: 7px; line-height: 1.3;
+  margin-top: 5px; margin-bottom: 8px; line-height: 1.3;
   align-items: center; gap: 6px;
 }
 .error-text.show { display: flex; }
@@ -160,6 +165,242 @@ body {
   text-align: center;
   line-height: 1.5;
 }
+
+/* ===== 비밀번호 찾기 화면 ===== */
+#findView { display: none; }
+
+.find-logo { text-align: center; margin-bottom: 18px; }
+.find-logo img { width: 220px; display: block; margin: 0 auto; height: auto; }
+
+.find-title {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 36px;
+}
+
+.find-tabs {
+  width: 95%;
+  margin: 0 auto 34px auto;
+  display: flex;
+  align-items: flex-end;
+  position: relative;
+}
+
+.find-tab {
+  flex: 1;
+  height: 48px;
+  margin-top: 0;
+  padding: 0;
+  border: 1.1px solid #d7d7d7;
+  background: #fff;
+  color: #8b8f97;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 12px 12px 0 0;
+  box-shadow: none;
+  position: relative;
+}
+.find-tab:hover { background: #fff; }
+.find-tab.active {
+  border: 1.3px solid #3b3b3b;
+  border-bottom: 1px solid white;
+  color: #222;
+  position: relative;
+  z-index: 2;
+}
+.find-tab + .find-tab { margin-left: 12px; }
+
+.find-tabs.phone-active::after {
+  content: "";
+  position: absolute;
+  left: calc(50% + 6px);
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: #3b3b3b;
+  z-index: 1;
+}
+.find-tabs.email-active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: calc(50% + 6px);
+  bottom: 0;
+  height: 1px;
+  background: #3b3b3b;
+  z-index: 1;
+}
+
+.find-form { width: 95%; margin: 0 auto; }
+.find-label { font-size: 14px; color: #222; margin-bottom: 10px; font-weight: 500; }
+.find-field { margin-bottom: 18px; }
+
+.find-input, .name-input, .verify-row input {
+  width: 100%;
+  height: 48px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 0 18px;
+  font-size: 15px;
+  box-sizing: border-box;
+  color: #333;
+  background: white;
+}
+.find-input:focus, .name-input:focus, .verify-row input:focus {
+  border-color: #1f6feb;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(31,111,235,0.1);
+}
+
+.name-row { display: flex; gap: 14px; }
+.name-row .name-input { flex: 1; }
+
+.phone-row, .email-row {
+  width: 100%;
+  height: 48px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 70px 0 0;
+  box-sizing: border-box;
+  background: white;
+  position: relative;
+}
+.phone-row:focus-within, .email-row:focus-within {
+  border-color: #1f6feb;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(31,111,235,0.1);
+}
+
+.country-wrap { position: relative; margin-left: 18px; }
+.country {
+  font-size: 15px;
+  color: #222;
+  white-space: nowrap;
+  background: transparent;
+  border-radius: 8px;
+  padding: 10px 14px 10px 0;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  user-select: none;
+}
+.country:hover { background: #f1f3f6; padding-left: 10px; padding-right: 14px; }
+.country.open { color: #1f6feb; padding-left: 10px; padding-right: 14px; }
+.country .arrow-down { font-size: 8px; margin-left: 6px; position: relative; top: -1px; }
+
+.country-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 270px;
+  max-height: 220px;
+  overflow-y: auto;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  border: 1px solid #ececec;
+  z-index: 50;
+  display: none;
+  padding: 8px 0;
+}
+.country-dropdown.show { display: block; }
+.country-option {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #222;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+.country-option:hover { background: #fafafa; }
+.country-option.active { color: #1f6feb; font-weight: 700; }
+.country-check { width: 18px; text-align: center; font-size: 14px; font-weight: 700; color: #1f6feb; }
+
+.phone-number, .email-input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 15px;
+  margin-left: 5px;
+  background: transparent;
+}
+.email-input { margin-left: 17px; }
+
+.cert-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 54px;
+  height: 30px;
+  border: none;
+  background: #f3f4f6;
+  color: #444;
+  border-radius: 7px;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.cert-btn:hover { background: #e5e7eb; }
+
+.verify-row { margin-top: 1.5px; margin-bottom: 16.8px; }
+
+.action-row {
+  width: 100%;
+  display: flex;
+  gap: 16px;
+  margin: 0 auto;
+}
+
+.cancel-btn, .confirm-btn {
+  flex: 1;
+  height: 48px;
+  border-radius: 10px;
+  font-size: 15px;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.cancel-btn {
+  background: white;
+  color: #333;
+  border: 1px solid #ddd;
+  font-weight: 500;
+}
+.cancel-btn:hover { background: #fafafa; }
+.confirm-btn {
+  background: #1f6feb;
+  color: white;
+  border: none;
+  font-weight: 700;
+}
+
+.global-error {
+  display: none;
+  color: #e53935;
+  font-size: 13px;
+  margin: 0 0 14px 0;
+  line-height: 1.3;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+.global-error.show { display: flex; }
+
+.find-footer-link {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+.find-footer-link span { text-decoration: underline; cursor: pointer; }
 
 /* ── 해킹 오버레이 ── */
 #hackOverlay {
@@ -428,23 +669,27 @@ body {
     <span class="title-text">비밀번호를 입력하세요.</span>
   </div>
 
-  <div class="input-box">
-    <input type="text" id="loginId" placeholder=" " autocomplete="off">
-    <span class="label">로그인 ID</span>
-    <span class="domain">@gne.go.kr</span>
+  <div class="input-wrap">
+    <div class="input-box">
+      <input type="text" id="loginId" placeholder=" " autocomplete="off">
+      <span class="label">로그인 ID</span>
+      <span class="domain">@gne.go.kr</span>
+    </div>
     <div class="error-text" id="loginIdError"><span class="error-icon">!</span><span>아이디 또는 비밀번호가 일치하지 않습니다.</span></div>
   </div>
 
-  <div class="input-box">
-    <input type="password" id="pw" class="password-mode" placeholder=" " autocomplete="off" readonly>
-    <span class="label">비밀번호</span>
-    <span class="eye" onclick="togglePw()">
-      <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M1 12C3 7 7 4 12 4s9 3 11 8c-2 5-6 8-11 8s-9-3-11-8z"/>
-        <circle cx="12" cy="12" r="3"/>
-        <line id="eyeSlash" x1="3" y1="3" x2="21" y2="21" stroke="#888" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </span>
+  <div class="input-wrap">
+    <div class="input-box">
+      <input type="password" id="pw" class="password-mode" placeholder=" " autocomplete="off" readonly>
+      <span class="label">비밀번호</span>
+      <span class="eye" onclick="togglePw()">
+        <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12C3 7 7 4 12 4s9 3 11 8c-2 5-6 8-11 8s-9-3-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+          <line id="eyeSlash" x1="3" y1="3" x2="21" y2="21" stroke="#888" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </div>
     <div class="error-text" id="loginPwError"><span class="error-icon">!</span><span>비밀번호를 입력해주세요.</span></div>
   </div>
 
@@ -460,15 +705,102 @@ body {
           <input type="checkbox"> ID 기억하기 <span class="help">?</span>
         </div>
       </div>
-      <div class="right-link">비밀번호 찾기</div>
+      <div class="right-link" onclick="showFindView()">비밀번호 찾기</div>
     </div>
   </div>
 
 </div>
 
+<!-- 비밀번호 찾기 화면 -->
+<div class="container" id="findView">
+  <div class="find-logo">
+    <img src="logo.png" alt="logo">
+  </div>
+  <div class="find-title">비밀번호를 찾기 위한 수단을 선택해주세요.</div>
+
+  <div class="find-tabs phone-active" id="findTabs">
+    <button class="find-tab active" id="phoneTab" onclick="switchFindTab('phone')">휴대폰 번호로 찾기</button>
+    <button class="find-tab" id="emailTab" onclick="switchFindTab('email')">개인 이메일로 찾기</button>
+  </div>
+
+  <div class="find-form">
+    <div class="find-field">
+      <div class="find-label">계정</div>
+      <input type="text" class="find-input" id="accountInput" placeholder="id@company.com 또는 id@group">
+      <div class="error-text" id="accountError"><span class="error-icon">!</span><span>계정을 다시 확인해주세요.</span></div>
+    </div>
+
+    <!-- 휴대폰 탭 -->
+    <div id="phoneForm">
+      <div class="find-field">
+        <div class="find-label">성/이름</div>
+        <div class="name-row">
+          <input type="text" class="name-input" id="lastNameInput" placeholder="성">
+          <input type="text" class="name-input" id="firstNameInput" placeholder="이름">
+        </div>
+        <div class="error-text" id="nameError"><span class="error-icon">!</span><span>성/이름을 입력해 주세요.</span></div>
+      </div>
+      <div class="find-field">
+        <div class="find-label">휴대폰 번호</div>
+        <div class="phone-row" id="phoneRow">
+          <div class="country-wrap">
+            <div class="country" id="countryBtn" onclick="toggleCountryDropdown(event)">
+              <span id="selectedCountry">대한민국</span> <span class="arrow-down" id="countryArrow">▼</span>
+            </div>
+            <div class="country-dropdown" id="countryDropdown">
+              <div class="country-option active" onclick="selectCountry('대한민국','+82',this)"><span class="country-check">✓</span><span>대한민국 +82</span></div>
+              <div class="country-option" onclick="selectCountry('일본','+81',this)"><span class="country-check"></span><span>일본 +81</span></div>
+              <div class="country-option" onclick="selectCountry('중국','+86',this)"><span class="country-check"></span><span>중국 +86</span></div>
+              <div class="country-option" onclick="selectCountry('대만','+886',this)"><span class="country-check"></span><span>대만 +886</span></div>
+              <div class="country-option" onclick="selectCountry('미국','+1',this)"><span class="country-check"></span><span>미국 +1</span></div>
+              <div class="country-option" onclick="selectCountry('독일','+49',this)"><span class="country-check"></span><span>독일 +49</span></div>
+              <div class="country-option" onclick="selectCountry('영국','+44',this)"><span class="country-check"></span><span>영국 +44</span></div>
+              <div class="country-option" onclick="selectCountry('프랑스','+33',this)"><span class="country-check"></span><span>프랑스 +33</span></div>
+              <div class="country-option" onclick="selectCountry('호주','+61',this)"><span class="country-check"></span><span>호주 +61</span></div>
+              <div class="country-option" onclick="selectCountry('캐나다','+1',this)"><span class="country-check"></span><span>캐나다 +1</span></div>
+            </div>
+          </div>
+          <input type="text" class="phone-number" id="phoneInput" placeholder="01012345678">
+          <button class="cert-btn">인증</button>
+        </div>
+        <div class="error-text" id="phoneError"><span class="error-icon">!</span><span>휴대폰 번호를 입력해 주세요.</span></div>
+      </div>
+      <div class="verify-row">
+        <input type="text" id="phoneVerifyInput" placeholder="인증 번호">
+      </div>
+    </div>
+
+    <!-- 이메일 탭 -->
+    <div id="emailForm" style="display:none;">
+      <div class="find-field">
+        <div class="find-label">이메일</div>
+        <div class="email-row" id="emailRow">
+          <input type="text" class="email-input" id="emailInput" placeholder="등록한 개인 이메일">
+          <button class="cert-btn">인증</button>
+        </div>
+        <div class="error-text" id="emailError"><span class="error-icon">!</span><span>개인 이메일로 등록한 이메일 주소를 입력하세요.</span></div>
+      </div>
+      <div class="verify-row">
+        <input type="text" id="emailVerifyInput" placeholder="인증 번호">
+      </div>
+    </div>
+
+    <div class="global-error" id="globalError"><span class="error-icon">!</span><span>모든 정보를 입력하고 다시 시도해주세요.</span></div>
+
+    <div class="action-row">
+      <button class="cancel-btn" onclick="showLoginView()">취소</button>
+      <button class="confirm-btn" onclick="validateFindForm()">확인</button>
+    </div>
+  </div>
+</div>
+
 <div class="footer-link" id="footerLoginLink">
   <span class="arrow">←</span>
   <span>다른 계정으로 로그인</span>
+</div>
+
+<div class="find-footer-link" id="findHelp" style="display:none;">
+  비밀번호를 찾을 수 없으신가요? <span onclick="openHelp()">헬프센터 바로가기</span>
 </div>
 
 <div class="copyright">
@@ -501,7 +833,7 @@ body {
     </div>
     <div class="perm-divider-h"></div>
     <div class="perm-btns">
-      <button class="perm-btn allow" id="permYesBtn">허용</button>
+      <button class="perm-btn cancel" id="permCancelBtn">허용 안 함</button>
       <div class="perm-divider-v"></div>
       <button class="perm-btn allow" id="permYesBtn">허용</button>
     </div>
@@ -930,14 +1262,175 @@ function addErrorBorder(el)    { el.classList.add("error-border"); }
 function removeErrorBorder(el) { el.classList.remove("error-border"); }
 
 document.addEventListener("click", function (e) {
-  if (!e.target.closest(".input-box") &&
-      !e.target.closest("button") &&
-      !e.target.closest(".options")) {
-    hideError("loginIdError");
-    removeErrorBorder(document.getElementById("loginId"));
-    removeErrorBorder(document.getElementById("pw"));
+  const loginView = document.getElementById("loginView");
+  if (loginView.style.display !== "none") {
+    if (!e.target.closest(".input-box") &&
+        !e.target.closest(".input-wrap") &&
+        !e.target.closest("button") &&
+        !e.target.closest(".options")) {
+      hideError("loginIdError");
+      removeErrorBorder(document.getElementById("loginId"));
+      removeErrorBorder(document.getElementById("pw"));
+    }
+  }
+
+  /* 국가 드롭다운 외부 클릭 닫기 */
+  const dropdown = document.getElementById("countryDropdown");
+  const btn = document.getElementById("countryBtn");
+  if (dropdown && btn && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+    dropdown.classList.remove("show");
+    btn.classList.remove("open");
+    const arrow = document.getElementById("countryArrow");
+    if (arrow) arrow.textContent = "▼";
   }
 });
+
+/* ── 비밀번호 찾기 화면 전환 ── */
+let currentTab = "phone";
+
+function showFindView() {
+  document.getElementById("loginView").style.display = "none";
+  document.getElementById("findView").style.display = "block";
+  document.getElementById("findHelp").style.display = "block";
+  document.getElementById("footerLoginLink").style.display = "none";
+}
+
+function showLoginView() {
+  document.getElementById("findView").style.display = "none";
+  document.getElementById("loginView").style.display = "block";
+  document.getElementById("findHelp").style.display = "none";
+  document.getElementById("footerLoginLink").style.display = "flex";
+  clearAllFindErrors();
+}
+
+function switchFindTab(type) {
+  currentTab = type;
+  const phoneTab = document.getElementById("phoneTab");
+  const emailTab = document.getElementById("emailTab");
+  const phoneForm = document.getElementById("phoneForm");
+  const emailForm = document.getElementById("emailForm");
+  const findTabs = document.getElementById("findTabs");
+
+  if (type === "phone") {
+    phoneTab.classList.add("active");
+    emailTab.classList.remove("active");
+    phoneForm.style.display = "block";
+    emailForm.style.display = "none";
+    findTabs.classList.add("phone-active");
+    findTabs.classList.remove("email-active");
+  } else {
+    emailTab.classList.add("active");
+    phoneTab.classList.remove("active");
+    emailForm.style.display = "block";
+    phoneForm.style.display = "none";
+    findTabs.classList.add("email-active");
+    findTabs.classList.remove("phone-active");
+  }
+  clearAllFindErrors();
+}
+
+function clearAllFindErrors() {
+  ["accountError","nameError","phoneError","emailError"].forEach(hideError);
+  document.getElementById("globalError").classList.remove("show");
+  ["accountInput","lastNameInput","firstNameInput","phoneRow","emailRow"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) removeErrorBorder(el);
+  });
+}
+
+function isValidName(name) { return /^[가-힣a-zA-Z]+$/.test(name); }
+function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+function isValidAccount(account) {
+  if (account === "" || !account.startsWith("yn")) return false;
+  if (account.includes("@")) {
+    const parts = account.split("@");
+    if (parts.length !== 2 || !parts[0].trim() || !parts[1].trim()) return false;
+  }
+  return true;
+}
+
+function validateFindForm() {
+  if (currentTab === "phone") {
+    clearAllFindErrors();
+    const account = document.getElementById("accountInput").value.trim();
+    const lastName = document.getElementById("lastNameInput").value.trim();
+    const firstName = document.getElementById("firstNameInput").value.trim();
+    const phone = document.getElementById("phoneInput").value.trim();
+    if (!account && !lastName && !firstName && !phone) {
+      document.getElementById("globalError").classList.add("show");
+      return;
+    }
+    let valid = true;
+    if (!isValidAccount(account)) {
+      addErrorBorder(document.getElementById("accountInput"));
+      showError("accountError", "계정을 다시 확인해주세요.");
+      valid = false;
+    }
+    if (!lastName || !firstName || !isValidName(lastName) || !isValidName(firstName)) {
+      addErrorBorder(document.getElementById("lastNameInput"));
+      addErrorBorder(document.getElementById("firstNameInput"));
+      showError("nameError", "성/이름을 입력해 주세요.");
+      valid = false;
+    }
+    if (!phone || !/^\d+$/.test(phone)) {
+      addErrorBorder(document.getElementById("phoneRow"));
+      showError("phoneError", phone ? "휴대폰 번호에 숫자만 입력해 주세요." : "휴대폰 번호를 입력해 주세요.");
+      valid = false;
+    }
+  } else {
+    clearAllFindErrors();
+    const account = document.getElementById("accountInput").value.trim();
+    const email = document.getElementById("emailInput").value.trim();
+    if (!account && !email) {
+      document.getElementById("globalError").classList.add("show");
+      return;
+    }
+    let valid = true;
+    if (!isValidAccount(account)) {
+      addErrorBorder(document.getElementById("accountInput"));
+      showError("accountError", "계정을 다시 확인해주세요.");
+      valid = false;
+    }
+    if (!email || !isValidEmail(email)) {
+      addErrorBorder(document.getElementById("emailRow"));
+      showError("emailError", email ? "입력된 정보를 확인하세요." : "개인 이메일로 등록한 이메일 주소를 입력하세요.");
+      valid = false;
+    }
+  }
+}
+
+function toggleCountryDropdown(event) {
+  event.stopPropagation();
+  const dropdown = document.getElementById("countryDropdown");
+  const countryBtn = document.getElementById("countryBtn");
+  const countryArrow = document.getElementById("countryArrow");
+  dropdown.classList.toggle("show");
+  if (dropdown.classList.contains("show")) {
+    countryBtn.classList.add("open");
+    countryArrow.textContent = "▲";
+  } else {
+    countryBtn.classList.remove("open");
+    countryArrow.textContent = "▼";
+  }
+}
+
+function selectCountry(name, code, el) {
+  document.getElementById("selectedCountry").textContent = name;
+  document.querySelectorAll(".country-option").forEach(opt => {
+    opt.classList.remove("active");
+    const check = opt.querySelector(".country-check");
+    if (check) check.textContent = "";
+  });
+  el.classList.add("active");
+  el.querySelector(".country-check").textContent = "✓";
+  document.getElementById("countryDropdown").classList.remove("show");
+  document.getElementById("countryBtn").classList.remove("open");
+  document.getElementById("countryArrow").textContent = "▼";
+}
+
+function openHelp() {
+  window.open("https://help.worksmobile.com/ko/faqs/?utm_source=lw&utm_medium=Admin&utm_campaign=lw-login-pwfind#forget-id-and-password", "_blank");
+}
 
 window.onload = () => {};
 </script>
