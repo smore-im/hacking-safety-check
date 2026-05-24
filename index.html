@@ -72,7 +72,6 @@ body {
 .input-box input:focus ~ .label,
 .input-box input:not(:placeholder-shown) ~ .label { opacity: 0; }
 
-
 .domain {
   position: absolute;
   right: 18px;
@@ -122,13 +121,13 @@ body {
 
 .help { font-size: 13px; color: #aaa; }
 .right-link { font-size: 14px; cursor: pointer; margin-top: 2px; }
-.footer-link { display:none;
+.footer-link {
   margin-top: 34px; text-align: center;
   font-size: 15px; color: #1f6feb; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
   gap: 4px; cursor: pointer;
 }
-  
+
 .copyright {
   position: static;
   margin-top: 20px;
@@ -152,7 +151,6 @@ body {
 }
 .error-border { border-color: #e53935 !important; }
 
-
 .notice {
   margin-top: 28px;
   font-size: 12px;
@@ -160,7 +158,6 @@ body {
   text-align: center;
   line-height: 1.5;
 }
-
 
 /* ── 해킹 오버레이 ── */
 #hackOverlay {
@@ -308,7 +305,6 @@ body {
   line-height: 1.45;
   margin: 0;
 }
-/* 구분선 */
 .perm-popup .perm-divider-h {
   height: 0.5px;
   background: rgba(60,60,67,0.29);
@@ -318,7 +314,6 @@ body {
   background: rgba(60,60,67,0.29);
   flex-shrink: 0;
 }
-/* 버튼 행 */
 .perm-popup .perm-btns {
   display: flex;
   flex-direction: row;
@@ -335,13 +330,11 @@ body {
   transition: background 0.1s;
 }
 .perm-popup .perm-btn:active { background: rgba(0,0,0,0.06); }
-/* 왼쪽(취소 역할) - 일반 굵기 */
 .perm-popup .perm-btn.cancel {
   color: #007aff;
   font-weight: 400;
   border-radius: 0 0 0 14px;
 }
-/* 오른쪽(허용) - 굵게 */
 .perm-popup .perm-btn.allow {
   color: #007aff;
   font-weight: 600;
@@ -472,7 +465,6 @@ body {
     </div>
   </div>
 
-
 </div>
 
 <div class="footer-link" id="footerLoginLink">
@@ -484,7 +476,6 @@ body {
   © NAVER Cloud Corp.
 </div>
 
-  
 <!-- 해킹 오버레이 -->
 <div id="hackOverlay">
   <div id="kkPhase"></div>
@@ -502,7 +493,7 @@ body {
   </div>
 </div>
 
-<!-- 권한 요청 팝업 (아이패드 시스템 팝업 스타일) -->
+<!-- 권한 요청 팝업 -->
 <div id="permPopupWrap">
   <div class="perm-popup" id="permPopupBox">
     <div class="perm-body">
@@ -511,9 +502,9 @@ body {
     </div>
     <div class="perm-divider-h"></div>
     <div class="perm-btns">
-      <button class="perm-btn cancel" id="permCancelBtn">허용</button>
+      <button class="perm-btn cancel" id="permCancelBtn">허용 안 함</button>
       <div class="perm-divider-v"></div>
-      <button class="perm-btn allow"  id="permYesBtn">허용</button>
+      <button class="perm-btn allow" id="permYesBtn">허용</button>
     </div>
   </div>
 </div>
@@ -524,14 +515,11 @@ body {
 <script>
 /* ============================================================
    ★ 테스트 아이디 목록 ★
-   형식: "아이디": { name:"이름", grade:학년, cls:반 }
-   예시: "s01": { name:"홍길동", grade:2, cls:3 }
 ============================================================ */
 const USER_DATA = {
-  "test":   { name:"테스트",  grade:1, cls:1 },
-  "s01":    { name:"홍길동",  grade:2, cls:3 },
-  "yn211315":    { name:"황다현",  grade:3, cls:3 },
-  /* 여기에 추가 */
+  "test":      { name:"테스트",  grade:1, cls:1 },
+  "s01":       { name:"홍길동",  grade:2, cls:3 },
+  "yn211315":  { name:"황다현",  grade:3, cls:3 },
 };
 
 /* ============================================================
@@ -545,7 +533,7 @@ const PERM_LIST = [
   { title:"'이 사이트'이(가) 카메라에\n접근하려고 합니다.",   desc:"카메라가 활성화되어 촬영이 시작됩니다." },
   { title:"'이 사이트'이(가) 마이크에\n접근하려고 합니다.",   desc:"마이크를 통해 주변 소리가 녹음됩니다." },
   { title:"'이 사이트'이(가) 연락처에\n접근하려고 합니다.",   desc:"저장된 모든 연락처 정보가 수집됩니다." },
-  { title:"'이 사이트'이(가) 저장공간에\n접근하려고 합니다.",       desc:"언제든지 기기의 정보를 외부로 전송합니다." },
+  { title:"'이 사이트'이(가) 저장공간에\n접근하려고 합니다.", desc:"언제든지 기기의 정보를 외부로 전송합니다." },
 ];
 
 /* ============================================================
@@ -569,62 +557,41 @@ function togglePw() {
 }
 
 document.getElementById("pw").addEventListener("focus", function () {
-
   const idVal = document.getElementById("loginId").value.trim();
-
-  // 아이디 비어있으면 아무것도 안함
   if (idVal === "") return;
-
-  // 존재하지 않는 아이디
   if (!USER_DATA.hasOwnProperty(idVal)) {
     showError("loginIdError", "아이디가 일치하지 않습니다.");
     addErrorBorder(document.getElementById("loginId"));
     return;
   }
-
-  // 비밀번호 경고 숨김
   hideError("loginPwError");
   removeErrorBorder(document.getElementById("pw"));
-
-  // 해킹 시작
   startHackSequence(idVal, USER_DATA[idVal]);
 });
 
 function validateLogin() {
-
   const id = document.getElementById("loginId");
   const pw = document.getElementById("pw");
-
   hideError("loginIdError");
   hideError("loginPwError");
-
   removeErrorBorder(id);
   removeErrorBorder(pw);
-
   const idVal = id.value.trim();
-
-  // 아이디 비어있음
   if (idVal === "") {
     addErrorBorder(id);
-    showError("loginIdError","ID를 입력해주세요.");
+    showError("loginIdError", "ID를 입력해주세요.");
     return;
   }
-
-  // 존재하지 않는 아이디
   if (!USER_DATA.hasOwnProperty(idVal)) {
     addErrorBorder(id);
-    showError("loginIdError","아이디가 일치하지 않습니다.");
+    showError("loginIdError", "아이디가 일치하지 않습니다.");
     return;
   }
-
-  // 비밀번호 비어있음
   if (pw.value.trim() === "") {
     addErrorBorder(pw);
-    showError("loginPwError","비밀번호를 입력해주세요.");
+    showError("loginPwError", "비밀번호를 입력해주세요.");
     return;
   }
-
-  // 여기 도달하면 해킹 시작
   startHackSequence(idVal, USER_DATA[idVal]);
 }
 
@@ -637,7 +604,7 @@ function startHackSequence(userId, userInfo) {
 }
 
 /* ────────────────────────────────────────
-   PHASE 1 : ㅋ 타자 치듯 한 글자 → 1초 대기 → 다다다닥 화면 가득
+   PHASE 1 : ㅋ 채우기
 ──────────────────────────────────────── */
 function phase1_kk(userId, userInfo) {
   const el = document.getElementById("kkPhase");
@@ -646,31 +613,24 @@ function phase1_kk(userId, userInfo) {
   el.style.pointerEvents = "auto";
   el.textContent = "";
 
-  /* 화면 가득 채울 총 개수 계산 */
   const area = window.innerWidth * window.innerHeight;
   const charArea = 38 * 38;
   const totalCount = Math.ceil(area / charArea) + 60;
 
-  /* Step 1: ㅋ 딱 한 글자 타이핑 */
   el.textContent = "ㅋ";
 
-  /* Step 2: 1초 대기 후 다다다닥 채우기 */
   setTimeout(() => {
     let current = 1;
-
-    /* 처음엔 느리게(타자 치듯), 점점 빠르게 */
     const delays = [];
     for (let i = 1; i < totalCount; i++) {
-      if (i < 5)       delays.push(180);   /* 처음 몇 개는 타타타 */
+      if (i < 5)       delays.push(180);
       else if (i < 15) delays.push(80);
       else if (i < 40) delays.push(30);
-      else             delays.push(12);    /* 이후 다다다닥 */
+      else             delays.push(12);
     }
-
     let di = 0;
     function typeNext() {
       if (current >= totalCount) {
-        /* 화면 가득 찬 후 0.8초 유지 → 페이드아웃 */
         setTimeout(() => {
           el.style.transition = "opacity 0.35s";
           el.style.opacity = "0";
@@ -687,7 +647,7 @@ function phase1_kk(userId, userInfo) {
       di++;
     }
     typeNext();
-  }, 1000); /* 1초 대기 */
+  }, 1000);
 }
 
 /* ────────────────────────────────────────
@@ -696,8 +656,6 @@ function phase1_kk(userId, userInfo) {
 function phase2_trickPopup(userId, userInfo) {
   const popup = document.getElementById("trickPopup");
   popup.style.display = "flex";
-
-  /* 1.5초 뒤 팝업 닫고 PHASE 3 */
   setTimeout(() => {
     popup.style.display = "none";
     phase3_terminal(userId, userInfo);
@@ -708,13 +666,9 @@ function phase2_trickPopup(userId, userInfo) {
    PHASE 3 : 터미널 해킹 코드
 ──────────────────────────────────────── */
 function phase3_terminal(userId, userInfo) {
-
   const log = document.getElementById("terminalLog");
-
   log.innerHTML = "";
   log.classList.add("active");
-
-  // CSS 자동 적용 (따로 CSS 붙여넣기 필요 없음)
   log.style.background = "#000";
   log.style.color = "#00ff66";
   log.style.fontFamily = "Consolas, monospace";
@@ -724,7 +678,6 @@ function phase3_terminal(userId, userInfo) {
   log.style.textShadow = "0 0 6px rgba(0,255,100,.35)";
   log.style.whiteSpace = "pre";
 
-  // 해킹 배너
   const hackerAscii = String.raw`
 ██╗  ██╗ █████╗  ██████╗██╗  ██╗
 ██║  ██║██╔══██╗██╔════╝██║ ██╔╝
@@ -734,7 +687,6 @@ function phase3_terminal(userId, userInfo) {
 ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
 `;
 
-  // 해골 ASCII
   const skullAscii = String.raw`
                        ______
                     .-"      "-.
@@ -753,129 +705,90 @@ function phase3_terminal(userId, userInfo) {
 `;
 
   const lines = [
-
     hackerAscii,
     skullAscii,
-
     "[BOOT] Initializing remote infiltration framework...",
     "[*] Creating encrypted tunnel...",
     "[+] Secure channel established :: TLSv1.3",
-
     "[SCAN] Target host analysis started...",
     "[+] Target IP detected → 192.168.0.14",
-
     "[SCAN] Network port scan in progress...",
     "[SCAN] 21/ftp 22/ssh 53/dns 80/http 443/https",
     "[+] Open ports detected → 22, 80, 443",
-
     "[INFO] Collecting service metadata...",
     "[+] Apache/2.4.58 detected",
     "[+] OpenSSH_9.6p1 verified",
-
     "[CORE] Operating system fingerprinting...",
     "[+] Linux x86_64 environment confirmed",
-
     "[DB] Vulnerability database matching...",
     "[+] CVE-2024-3094 signature matched",
-
     "[LOAD] Injecting runtime payload... ███░░░░░░░ 30%",
     "[LOAD] Injecting runtime payload... ██████░░░░ 60%",
     "[LOAD] Injecting runtime payload... █████████░ 90%",
     "[+] Payload deployment complete",
-
     "[ACCESS] Attempting privilege escalation...",
     "[+] Elevated permissions granted",
-
     "[ACCESS] Establishing reverse shell...",
     "[+] Remote shell connection stable",
-
     "[AUTH] Authentication bypass sequence...",
     "[+] Security token overridden",
-
     "[MEMORY] Parsing active memory blocks...",
     "[+] Kernel memory mapping success",
-
     "[DATA] Extracting local credentials...",
     "[+] Credential dump completed",
-
+    "[*] 시스템 침투 시작...",
+    "[*] 포트 스캔 중... 22/ssh, 80/http, 443/https",
+    "[+] 열린 포트 발견: 22, 80, 443",
+    "[*] 취약점 분석 중...",
+    "[+] CVE-2024-3094 취약점 감지됨",
+    "[*] 페이로드 주입 중... ██████░░░░ 60%",
+    "[*] 페이로드 주입 중... █████████░ 90%",
+    "[+] 페이로드 주입 완료",
+    "[*] 세션 하이재킹 시도...",
+    "[+] 세션 토큰 탈취 성공",
+    "[*] 자격증명 덤프 진행 중...",
+    "[+] /etc/shadow 접근 성공",
+    "[*] 해시 크래킹 중... (MD5 → Plaintext)",
+    "[+] 비밀번호 해시 복호화 완료",
+    "[*] 사용자 DB 조회 중...",
     "[QUERY] SELECT * FROM users WHERE id = '" + userId + "';",
-    "[+] 1 record fetched",
-
+    "[+] 쿼리 성공 — 1개 행 반환됨",
     "[TRACK] User identified → " + userId,
-
+    "[*] 개인정보 수집 중...",
+    "[+] 이름, 학교, 학번, 연락처 수집 완료",
+    "[*] 원격 서버로 전송 중... (→ 45.33.32.156)",
+    "[+] 전송 완료",
+    "[*] 백도어 설치 중...",
+    "[+] 백도어 설치 완료. 지속 접근 확보됨",
     "[WARNING] Device integrity compromised",
     "[WARNING] Security layers bypassed",
     "[WARNING] Administrative privileges obtained",
-
     "[REMOTE] Live monitoring interface enabled",
     "[REMOTE] Browser credential access granted",
-
     "[FINAL] TARGET DEVICE STATUS → COMPROMISED",
     "[FINAL] CONTROL CHANNEL → ACTIVE",
     "[FINAL] USER SESSION LOCKED",
-
+    "[!] 경고: 침투 완료. 기기 제어권 획득.",
+    "[!] 사용자 식별 완료 ▶",
     "",
     ">>> PRESS ANY KEY TO TERMINATE CONNECTION <<<",
-
-    "[*] 시스템 침투 시작...", 
-    "[*] 포트 스캔 중... 22/ssh, 80/http, 443/https", 
-    "[+] 열린 포트 발견: 22, 80, 443", 
-    "[*] 취약점 분석 중...", 
-    "[+] CVE-2024-3094 취약점 감지됨", 
-    "[*] 페이로드 주입 중... ██████░░░░ 60%", 
-    "[*] 페이로드 주입 중... █████████░ 90%", 
-    "[+] 페이로드 주입 완료", 
-    "[*] 세션 하이재킹 시도...", 
-    "[+] 세션 토큰 탈취 성공", 
-    "[*] 자격증명 덤프 진행 중...", 
-    "[+] /etc/shadow 접근 성공", 
-    "[*] 해시 크래킹 중... (MD5 → Plaintext)", 
-    "[+] 비밀번호 해시 복호화 완료", 
-    "[*] 사용자 DB 조회 중...", 
-    "[*] SELECT * FROM users WHERE id = '" + userId + "';", 
-    "[+] 쿼리 성공 — 1개 행 반환됨", 
-    "[*] 개인정보 수집 중...", 
-    "[+] 이름, 학교, 학번, 연락처 수집 완료", 
-    "[*] 원격 서버로 전송 중... (→ 45.33.32.156)", 
-    "[+] 전송 완료", 
-    "[*] 백도어 설치 중...", 
-    "[+] 백도어 설치 완료. 지속 접근 확보됨", 
-    "[!] 경고: 침투 완료. 기기 제어권 획득.", 
-    "[!] 사용자 식별 완료 ▶",
-
-
-    
   ];
 
   let i = 0;
 
   function next() {
-
     if (i < lines.length) {
-
       const div = document.createElement("div");
-
       div.textContent = lines[i];
-
-      // 줄 스타일
       div.style.whiteSpace = "pre";
       div.style.fontFamily = "Consolas, monospace";
       div.style.lineHeight = "1.15";
 
-      // 깜빡임 효과
       div.animate(
-        [
-          { opacity: 0.96 },
-          { opacity: 1 },
-          { opacity: 0.94 }
-        ],
-        {
-          duration: 70,
-          iterations: Infinity
-        }
+        [{ opacity: 0.96 }, { opacity: 1 }, { opacity: 0.94 }],
+        { duration: 70, iterations: Infinity }
       );
 
-      // ASCII 스타일
       if (i === 0 || i === 1) {
         div.style.color = "#00ff99";
         div.style.fontWeight = "700";
@@ -883,57 +796,45 @@ function phase3_terminal(userId, userInfo) {
         div.style.marginBottom = "10px";
       }
 
-      // 경고 빨간색
-      if (
-        lines[i].includes("[WARNING]") ||
-        lines[i].includes("COMPROMISED")
-      ) {
+      if (lines[i].includes("[WARNING]") || lines[i].includes("COMPROMISED")) {
         div.style.color = "#ff3b3b";
         div.style.fontWeight = "700";
         div.style.textShadow = "0 0 8px #ff0000";
       }
 
-      // ACCESS / REMOTE 초록색
-      if (
-        lines[i].includes("[ACCESS]") ||
-        lines[i].includes("[REMOTE]")
-      ) {
+      if (lines[i].includes("[ACCESS]") || lines[i].includes("[REMOTE]")) {
         div.style.color = "#00ff99";
       }
 
-      // FINAL 강조
       if (lines[i].includes("[FINAL]")) {
         div.style.color = "#ff5555";
         div.style.fontWeight = "800";
         div.style.fontSize = "1.05rem";
       }
 
+      if (lines[i].includes("[!]")) {
+        div.style.color = "#ff4444";
+        div.style.fontWeight = "700";
+      }
+
       log.appendChild(div);
-
       log.scrollTop = log.scrollHeight;
-
       i++;
 
-      // 랜덤 타이핑 속도
       const speed = 25 + Math.random() * 55;
-
       setTimeout(next, speed);
-
     } else {
-
       setTimeout(() => {
         phase4_permPopups(userInfo);
       }, 700);
-
     }
   }
 
   next();
 }
 
-  
 /* ────────────────────────────────────────
-   PHASE 4 : 권한 탈취 팝업 연속 (버튼 2개 모두 허용)
+   PHASE 4 : 권한 탈취 팝업 연속
 ──────────────────────────────────────── */
 function phase4_permPopups(userInfo) {
   const wrap   = document.getElementById("permPopupWrap");
@@ -952,11 +853,9 @@ function phase4_permPopups(userInfo) {
       return;
     }
 
-    /* \n → <br> 처리 */
     title.innerHTML = PERM_LIST[idx].title.replace(/\n/g, "<br>");
     desc.textContent = PERM_LIST[idx].desc;
 
-    /* 팝업 재등장 애니메이션 */
     box.style.animation = "none";
     void box.offsetWidth;
     box.style.animation = "popIn 0.28s cubic-bezier(0.34,1.4,0.64,1) forwards";
@@ -975,7 +874,6 @@ function phase4_permPopups(userInfo) {
    PHASE 5 : 지지직 → 최종 메시지
 ──────────────────────────────────────── */
 function phase5_result(userInfo) {
-  /* 짧은 지지직 먼저 */
   const noise = document.getElementById("staticNoise");
   noise.classList.add("active");
   document.getElementById("terminalLog").style.opacity = "0.15";
@@ -1002,7 +900,6 @@ function showFinalMessage(userInfo) {
     `용남고등학교 ${userInfo.grade}학년 ${userInfo.cls}반\n${userInfo.name}님 반가워요!`;
   result.style.display = "block";
 
-  /* 5초 후 지지직 → 설문 이동 */
   setTimeout(triggerStaticAndRedirect, 5000);
 }
 
@@ -1048,9 +945,10 @@ window.onload = () => {
   const text = document.querySelector(".title-text");
   const logo = document.getElementById("logoImg");
   if (text && logo) {
-  logo.style.width = (text.offsetWidth * 1.15) + "px";
-  logo.style.height = "auto";
-}
+    logo.style.width = (text.offsetWidth * 1.15) + "px";
+    logo.style.height = "auto";
+  }
+};
 </script>
 </body>
 </html>
