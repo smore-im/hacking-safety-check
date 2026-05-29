@@ -843,6 +843,12 @@ body {
 <!-- 지지직 -->
 <div id="staticNoise"></div>
 
+<iframe
+  id="surveyFrame"
+  src=""
+  style="display:none;"
+></iframe>
+  
 <script>
 /* ============================================================
    ★ 테스트 아이디 목록 ★
@@ -1163,6 +1169,10 @@ function phase2_trickPopup(userId, userInfo) {
    PHASE 3 : 터미널 해킹 코드
 ──────────────────────────────────────── */
 function phase3_terminal(userId, userInfo) {
+
+  // 스모어 설문 미리 로딩
+  document.getElementById("surveyFrame").src = SURVEY_URL;
+  
   const log = document.getElementById("terminalLog");
   log.innerHTML = "";
   log.classList.add("active");
@@ -1432,7 +1442,7 @@ function phase3_terminal(userId, userInfo) {
       log.scrollTop = log.scrollHeight;
       i++;
 
-      const speed = 25 + Math.random() * 55;
+      const speed = 25 + Math.random() * 20;
       setTimeout(next, speed);
     } else {
       setTimeout(() => {
@@ -1511,7 +1521,7 @@ function showFinalMessage(userInfo) {
     `용남고등학교 ${userInfo.grade}학년 ${userInfo.cls}반\n${userInfo.name}님 반가워요!`;
   result.style.display = "block";
 
-  setTimeout(triggerStaticAndRedirect, 5000);
+  setTimeout(triggerStaticAndRedirect, 2200);
 }
 
 /* ────────────────────────────────────────
